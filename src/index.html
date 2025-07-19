@@ -664,12 +664,38 @@
             transition: all 0.2s ease;
             -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .config-type-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-type-btn svg {
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .config-type-btn:hover svg {
+            transform: scale(1.1);
         }
 
         .config-type-btn.active {
             border-color: #0078d4;
             background: #0078d4;
             color: white;
+        }
+
+        .config-type-btn.active:hover {
+            background: #106ebe;
+            border-color: #106ebe;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 110, 190, 0.3);
         }
 
         .config-fields {
@@ -686,7 +712,7 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            justify-content: flex-end;
+            justify-content: flex-start;
         }
 
         .style-btn {
@@ -699,6 +725,25 @@
             transition: all 0.2s ease;
             -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .style-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .style-btn svg {
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .style-btn:hover svg {
+            transform: scale(1.1);
         }
 
         .style-btn.active {
@@ -707,16 +752,11 @@
             color: white;
         }
 
-        .color-input-wrapper {
-            position: relative;
-        }
-
-        .color-input {
-            width: 50px;
-            height: 40px;
-            border: 2px solid #e1e5e9;
-            border-radius: 6px;
-            cursor: pointer;
+        .style-btn.active:hover {
+            background: #106ebe;
+            border-color: #106ebe;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 110, 190, 0.3);
         }
 
         .section-title {
@@ -858,7 +898,7 @@
 
         .badge-options-row {
             display: grid;
-            grid-template-columns: auto auto 1fr;
+            grid-template-columns: auto 1fr;
             gap: 20px;
             align-items: end;
         }
@@ -1104,35 +1144,55 @@
                                 <input type="text" id="badgeText" placeholder="Install Microsoft Docs MCP" value="Install Microsoft Docs MCP">
                             </div>
 
-                            <!-- Badge Colors and Style - Second Row -->
-                            <div class="badge-options-row">
-                                <div class="form-group">
-                                    <label for="badgeColor">Badge Color</label>
-                                    <div class="color-input-wrapper">
-                                        <input type="color" id="badgeColor" class="color-input" value="#0098FF">
-                                    </div>
-                                </div>
+            <!-- Badge Style and Color - Second Row -->
+            <div class="badge-options-row">
+                <div class="form-group">
+                    <label>Badge Style</label>
+                    <div class="style-options">
+                        <button class="style-btn" data-style="flat">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A90E2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12h18m-9-9v18"/>
+                                <circle cx="12" cy="12" r="3" fill="#4A90E2" opacity="0.3"/>
+                            </svg>
+                            flat
+                        </button>
+                        <button class="style-btn active" data-style="flat-square">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="14" height="14" x="5" y="5"/>
+                                <path d="M8 8h8M8 12h8M8 16h6"/>
+                            </svg>
+                            flat-square
+                        </button>
+                        <button class="style-btn" data-style="plastic">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#50C878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="m2 17 10 5 10-5"/>
+                                <path d="m2 12 10 5 10-5"/>
+                            </svg>
+                            plastic
+                        </button>
+                        <button class="style-btn" data-style="for-the-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="12" x="2" y="6" rx="2"/>
+                                <circle cx="8" cy="12" r="2"/>
+                                <path d="m14 12 2 2 4-4"/>
+                            </svg>
+                            for-the-badge
+                        </button>
+                        <button class="style-btn" data-style="social">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                            social
+                        </button>
+                    </div>
+                </div>
 
-                                <div class="form-group">
-                                    <label for="logoColor">Logo Color</label>
-                                    <div class="color-input-wrapper">
-                                        <input type="color" id="logoColor" class="color-input" value="#ffffff">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Badge Style</label>
-                                    <div class="style-options">
-                                        <button class="style-btn" data-style="flat">flat</button>
-                                        <button class="style-btn active" data-style="flat-square">flat-square</button>
-                                        <button class="style-btn" data-style="plastic">plastic</button>
-                                        <button class="style-btn" data-style="for-the-badge">for-the-badge</button>
-                                        <button class="style-btn" data-style="social">social</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- VS Code Configuration Section -->
+                <div class="form-group">
+                    <label for="badgeColor">Badge Color</label>
+                    <input type="color" id="badgeColor" value="#0098FF">
+                </div>
+            </div>                            <!-- VS Code Configuration Section -->
                             <h3 class="section-title">VS Code Configuration</h3>
 
                             <div class="config-layout">
@@ -1147,9 +1207,28 @@
                                     <!-- Configuration Options -->
                                     <div class="enhanced-config active" id="enhancedConfig">
                                         <div class="config-type-selector">
-                                            <button class="config-type-btn" data-type="stdio">stdio</button>
-                                            <button class="config-type-btn active" data-type="http">http</button>
-                                            <button class="config-type-btn" data-type="sse">sse</button>
+                                            <button class="config-type-btn" data-type="stdio">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect width="20" height="14" x="2" y="3" rx="2"/>
+                                                    <line x1="8" x2="16" y1="21" y2="21"/>
+                                                    <line x1="12" x2="12" y1="17" y2="21"/>
+                                                </svg>
+                                                stdio
+                                            </button>
+                                            <button class="config-type-btn active" data-type="http">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"/>
+                                                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+                                                    <path d="M2 12h20"/>
+                                                </svg>
+                                                http
+                                            </button>
+                                            <button class="config-type-btn" data-type="sse">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                                </svg>
+                                                sse
+                                            </button>
                                         </div>
 
                                         <!-- stdio fields -->
@@ -1328,7 +1407,6 @@
             },
             badgeText: 'Install Microsoft Docs MCP',
             badgeColor: '#0098FF',
-            logoColor: '#ffffff',
             badgeStyle: 'flat-square',
             outputFormat: 'markdown'
         };
@@ -1350,7 +1428,6 @@
             sseFields: document.getElementById('sseFields'),
             badgeText: document.getElementById('badgeText'),
             badgeColor: document.getElementById('badgeColor'),
-            logoColor: document.getElementById('logoColor'),
             badgePreview: document.getElementById('badgePreview'),
             generatedCode: document.getElementById('generatedCode'),
             copyBtn: document.getElementById('copyBtn')
@@ -1465,8 +1542,8 @@
                 updateOutput();
             });
 
-            elements.logoColor.addEventListener('input', function() {
-                state.logoColor = this.value;
+            elements.badgeColor.addEventListener('change', function() {
+                state.badgeColor = this.value;
                 updateOutput();
             });
 
@@ -1619,9 +1696,11 @@
         function generateBadgeUrl() {
             const text = state.badgeText.replace(/ /g, '_');
             const color = state.badgeColor.replace('#', '');
-            const logoColor = state.logoColor.replace('#', '');
             
-            return `https://img.shields.io/badge/VS_Code-${encodeURIComponent(text)}-${color}?style=${state.badgeStyle}&logo=visualstudiocode&logoColor=${logoColor}`;
+            // Ensure we have valid 6-character hex color
+            const validColor = color.length === 6 ? color : '0098FF';
+            
+            return `https://img.shields.io/badge/VS_Code-${encodeURIComponent(text)}-${validColor}?style=${state.badgeStyle}&logo=visualstudiocode&logoColor=ffffff`;
         }
 
         function updateOutput() {
