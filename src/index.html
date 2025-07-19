@@ -487,6 +487,14 @@
             font-size: 0.95rem;
         }
 
+        .field-description {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
         .form-group input,
         .form-group textarea,
         .form-group select {
@@ -961,9 +969,17 @@
                     <!-- Configuration Tab -->
                     <div class="tab-content active" id="configuration-tab">
                         <div class="form-section">
+                            <!-- Badge Text -->
+                            <div class="form-group">
+                                <label for="badgeText">Badge Text</label>
+                                <small class="field-description">The text that will appear on your install button/badge</small>
+                                <input type="text" id="badgeText" placeholder="Install Microsoft Docs MCP" value="Install Microsoft Docs MCP">
+                            </div>
+
                             <!-- MCP Name -->
                             <div class="form-group">
                                 <label for="mcpName">MCP Server Name</label>
+                                <small class="field-description">A unique identifier for your MCP server (used internally by VS Code)</small>
                                 <input type="text" id="mcpName" placeholder="e.g., microsoft.docs.mcp" value="microsoft.docs.mcp">
                             </div>
 
@@ -979,6 +995,7 @@
                             <!-- Simple Config -->
                             <div class="form-group" id="simpleConfig">
                                 <label for="configText">Configuration JSON</label>
+                                <small class="field-description">Raw JSON configuration for your MCP server connection</small>
                                 <textarea id="configText" placeholder='{"type":"http","url":"https://learn.microsoft.com/api/mcp"}'>{"type":"http","url":"https://learn.microsoft.com/api/mcp"}</textarea>
                             </div>
 
@@ -993,14 +1010,17 @@
                                 <div class="config-fields" id="stdioFields">
                                     <div class="form-group">
                                         <label for="command">Command</label>
+                                        <small class="field-description">The executable command to start your MCP server (e.g., npx, python, node)</small>
                                         <input type="text" id="command" placeholder="e.g., npx, python, node">
                                     </div>
                                     <div class="form-group">
                                         <label for="args">Arguments (comma-separated)</label>
+                                        <small class="field-description">Command-line arguments to pass to your MCP server executable</small>
                                         <input type="text" id="args" placeholder="e.g., -y, mcp-server-name">
                                     </div>
                                     <div class="form-group">
                                         <label for="env">Environment Variables (JSON)</label>
+                                        <small class="field-description">Environment variables to set when running your MCP server (optional)</small>
                                         <textarea id="env" placeholder='{"API_KEY": "${input:api-key}"}'></textarea>
                                     </div>
                                 </div>
@@ -1009,10 +1029,12 @@
                                 <div class="config-fields active" id="httpFields">
                                     <div class="form-group">
                                         <label for="url">Server URL</label>
+                                        <small class="field-description">The HTTP/HTTPS endpoint where your MCP server is hosted</small>
                                         <input type="url" id="url" placeholder="https://learn.microsoft.com/api/mcp" value="https://learn.microsoft.com/api/mcp">
                                     </div>
                                     <div class="form-group">
                                         <label for="headers">Headers (JSON)</label>
+                                        <small class="field-description">Optional HTTP headers for authentication or configuration (optional)</small>
                                         <textarea id="headers" placeholder='{"Authorization": "Bearer ${input:token}"}'></textarea>
                                     </div>
                                 </div>
@@ -1023,11 +1045,6 @@
                     <!-- Badge Customization Tab -->
                     <div class="tab-content" id="badge-tab">
                         <div class="form-section">
-                            <div class="form-group">
-                                <label for="badgeText">Badge Text</label>
-                                <input type="text" id="badgeText" placeholder="Install Microsoft Docs MCP" value="Install Microsoft Docs MCP">
-                            </div>
-
                             <div class="field-group">
                                 <div class="form-group">
                                     <label for="badgeColor">Badge Color</label>
