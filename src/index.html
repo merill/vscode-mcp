@@ -698,6 +698,67 @@
             box-shadow: 0 4px 12px rgba(16, 110, 190, 0.3);
         }
 
+        .command-type-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .command-type-btn {
+            padding: 8px 12px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .command-type-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .command-type-btn svg {
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .command-type-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        .command-type-btn.active {
+            border-color: #0078d4;
+            background: #0078d4;
+            color: white;
+        }
+
+        .command-type-btn.active:hover {
+            background: #106ebe;
+            border-color: #106ebe;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 110, 190, 0.3);
+        }
+
+        .command-custom-input {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .command-custom-input.active {
+            display: block;
+        }
+
         .config-fields {
             display: none;
             gap: 16px;
@@ -1234,9 +1295,51 @@
                                         <!-- stdio fields -->
                                         <div class="config-fields" id="stdioFields">
                                             <div class="form-group">
-                                                <label for="command">Command</label>
-                                                <small class="field-description">The executable command to start your MCP server (e.g., npx, python, node)</small>
-                                                <input type="text" id="command" placeholder="e.g., npx, python, node">
+                                                <label>Command</label>
+                                                <small class="field-description">The executable command to start your MCP server</small>
+                                                <div class="command-type-selector">
+                                                    <button class="command-type-btn active" data-command="npx">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                                            <path d="m2 17 10 5 10-5"/>
+                                                            <path d="m2 12 10 5 10-5"/>
+                                                        </svg>
+                                                        npx
+                                                    </button>
+                                                    <button class="command-type-btn" data-command="node">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8CC84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M12 3L4 7V17L12 21L20 17V7L12 3Z"/>
+                                                            <path d="M12 8L8 10V14L12 16L16 14V10L12 8Z"/>
+                                                        </svg>
+                                                        node
+                                                    </button>
+                                                    <button class="command-type-btn" data-command="python">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3776AB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M8 3C6.5 3 5 4.5 5 6v4c0 1.5 1.5 3 3 3h4c1.5 0 3-1.5 3-3V6c0-1.5-1.5-3-3-3H8Z"/>
+                                                            <path d="M16 11c1.5 0 3 1.5 3 3v4c0 1.5-1.5 3-3 3h-4c-1.5 0-3-1.5-3-3v-4c0-1.5 1.5-3 3-3h4Z"/>
+                                                            <circle cx="8.5" cy="6.5" r="0.5" fill="#3776AB"/>
+                                                            <circle cx="15.5" cy="17.5" r="0.5" fill="#3776AB"/>
+                                                        </svg>
+                                                        python
+                                                    </button>
+                                                    <button class="command-type-btn" data-command="cmd">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0078D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <rect width="20" height="14" x="2" y="3" rx="2"/>
+                                                            <line x1="8" x2="16" y1="21" y2="21"/>
+                                                            <line x1="12" x2="12" y1="17" y2="21"/>
+                                                            <path d="M7 8L9 10L7 12"/>
+                                                            <path d="M11 12H16"/>
+                                                        </svg>
+                                                        cmd
+                                                    </button>
+                                                    <button class="command-type-btn" data-command="custom">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                                                        </svg>
+                                                        custom
+                                                    </button>
+                                                </div>
+                                                <input type="text" id="command" placeholder="Enter custom command" class="command-custom-input">
                                             </div>
                                             <div class="form-group">
                                                 <label for="args">Arguments (comma-separated)</label>
@@ -1399,6 +1502,7 @@
         let state = {
             mcpName: 'microsoft.docs.mcp',
             configType: 'http',
+            command: 'npx',
             config: {
                 'microsoft.docs.mcp': {
                     type: 'http',
@@ -1481,6 +1585,29 @@
                         elements.httpFields.classList.add('active');
                     } else if (state.configType === 'sse') {
                         elements.sseFields.classList.add('active');
+                    }
+                    
+                    updateConfig();
+                    updateOutput();
+                });
+            });
+
+            // Command type toggle
+            document.querySelectorAll('.command-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.command-type-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const commandType = this.dataset.command;
+                    const commandInput = elements.command;
+                    
+                    if (commandType === 'custom') {
+                        commandInput.classList.add('active');
+                        commandInput.value = '';
+                        commandInput.placeholder = 'Enter custom command';
+                    } else {
+                        commandInput.classList.remove('active');
+                        commandInput.value = commandType;
                     }
                     
                     updateConfig();
@@ -1572,6 +1699,9 @@
             // Initial update
             updateOutput();
             formatJSON(); // Format the initial JSON
+
+            // Initialize command input with default value
+            elements.command.value = state.command;
         });
 
         function updateFormFromConfig() {
@@ -1605,9 +1735,22 @@
                     elements.stdioFields.classList.add('active');
                     
                     // Update stdio fields
-                    elements.command.value = config.command || '';
+                    const commandValue = config.command || state.command;
+                    elements.command.value = commandValue;
                     elements.args.value = config.args ? config.args.join(', ') : '';
                     elements.env.value = config.env ? JSON.stringify(config.env, null, 2) : '';
+                    
+                    // Update command type buttons
+                    document.querySelectorAll('.command-type-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.dataset.command === commandValue) {
+                            btn.classList.add('active');
+                            elements.command.classList.remove('active');
+                        } else if (btn.dataset.command === 'custom' && !['npx', 'node', 'python', 'cmd'].includes(commandValue)) {
+                            btn.classList.add('active');
+                            elements.command.classList.add('active');
+                        }
+                    });
                     
                 } else if (config.type === 'http') {
                     elements.httpFields.classList.add('active');
