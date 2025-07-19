@@ -1322,6 +1322,15 @@
                                                         </svg>
                                                         python (uv)
                                                     </button>
+                                                    <button class="command-type-btn" data-command="python">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3776AB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M8 3C6.5 3 5 4.5 5 6v4c0 1.5 1.5 3 3 3h4c1.5 0 3-1.5 3-3V6c0-1.5-1.5-3-3-3H8Z"/>
+                                                            <path d="M16 11c1.5 0 3 1.5 3 3v4c0 1.5-1.5 3-3 3h-4c-1.5 0-3-1.5-3-3v-4c0-1.5 1.5-3 3-3h4Z"/>
+                                                            <circle cx="8.5" cy="6.5" r="0.5" fill="#3776AB"/>
+                                                            <circle cx="15.5" cy="17.5" r="0.5" fill="#3776AB"/>
+                                                        </svg>
+                                                        python
+                                                    </button>
                                                     <button class="command-type-btn" data-command="cmd">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0078D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                             <rect width="20" height="14" x="2" y="3" rx="2"/>
@@ -1331,6 +1340,16 @@
                                                             <path d="M11 12H16"/>
                                                         </svg>
                                                         cmd
+                                                    </button>
+                                                    <button class="command-type-btn" data-command="dotnet">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#512BD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <circle cx="12" cy="12" r="10"/>
+                                                            <path d="M8 12h8"/>
+                                                            <path d="M12 8v8"/>
+                                                            <rect x="6" y="6" width="12" height="12" rx="2" fill="none"/>
+                                                            <path d="M9 9h6v6H9z" fill="#512BD4" opacity="0.3"/>
+                                                        </svg>
+                                                        dotnet
                                                     </button>
                                                     <button class="command-type-btn" data-command="custom">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1344,7 +1363,7 @@
                                             <div class="form-group">
                                                 <label for="args">Arguments (one per line)</label>
                                                 <small class="field-description">Command-line arguments to pass to your MCP server executable (one argument per line)</small>
-                                                <textarea id="args" placeholder="-y&#10;mcp-server-name&#10;--config&#10;./config.json"></textarea>
+                                                <textarea id="args" placeholder="-y&#10;@npm/package"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="env">Environment Variables (JSON)</label>
@@ -1600,14 +1619,46 @@
                     
                     const commandType = this.dataset.command;
                     const commandInput = elements.command;
+                    const argsInput = elements.args;
                     
                     if (commandType === 'custom') {
                         commandInput.classList.add('active');
                         commandInput.value = '';
                         commandInput.placeholder = 'Enter custom command';
+                        if (!argsInput.value.trim()) {
+                            argsInput.placeholder = 'Enter arguments\none per line';
+                        }
                     } else {
                         commandInput.classList.remove('active');
                         commandInput.value = commandType;
+                        
+                        // Update args placeholder with relevant examples if args is empty
+                        if (!argsInput.value.trim()) {
+                            let placeholderText = '';
+                            switch (commandType) {
+                                case 'npx':
+                                    placeholderText = '-y\n@npm/package';
+                                    break;
+                                case 'node':
+                                    placeholderText = 'server.js';
+                                    break;
+                                case 'uv':
+                                    placeholderText = '--directory\n/ABSOLUTE/PATH/TO/PARENT/FOLDER/weather\nrun\nweather.py';
+                                    break;
+                                case 'python':
+                                    placeholderText = 'mcp_server.py';
+                                    break;
+                                case 'cmd':
+                                    placeholderText = '/c\nmcp-server.bat';
+                                    break;
+                                case 'dotnet':
+                                    placeholderText = 'run\n--project\n<RELATIVE PATH TO PROJECT DIRECTORY>';
+                                    break;
+                                default:
+                                    placeholderText = 'Enter arguments\none per line';
+                            }
+                            argsInput.placeholder = placeholderText;
+                        }
                     }
                     
                     updateConfig();
@@ -1702,6 +1753,11 @@
 
             // Initialize command input with default value
             elements.command.value = state.command;
+            
+            // Initialize args placeholder based on default command
+            if (!elements.args.value.trim()) {
+                elements.args.placeholder = '-y\n@microsoft/mcp-server-playwright';
+            }
         });
 
         function updateFormFromConfig() {
@@ -1746,7 +1802,7 @@
                         if (btn.dataset.command === commandValue) {
                             btn.classList.add('active');
                             elements.command.classList.remove('active');
-                        } else if (btn.dataset.command === 'custom' && !['npx', 'node', 'uv', 'cmd'].includes(commandValue)) {
+                        } else if (btn.dataset.command === 'custom' && !['npx', 'node', 'uv', 'python', 'cmd', 'dotnet'].includes(commandValue)) {
                             btn.classList.add('active');
                             elements.command.classList.add('active');
                         }
