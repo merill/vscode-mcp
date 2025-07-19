@@ -1286,7 +1286,7 @@
                 </ul>
                 
                 <h3>Technical Details</h3>
-                <p>This tool generates install links based on <a href="https://code.visualstudio.com/api/extension-guides/ai/mcp" target="_blank" rel="noopener">Microsoft's official guidance</a> for Model Context Protocol integration with VS Code. The badges are powered by Shields.io for consistent, professional appearance.</p>
+                <p>This tool generates install links based on <a href="https://code.visualstudio.com/api/extension-guides/ai/mcp" target="_blank" rel="noopener">Microsoft's official guidance</a> for Model Context Protocol integration with VS Code. For more information about MCP servers, see the <a href="https://code.visualstudio.com/docs/copilot/chat/mcp-servers" target="_blank" rel="noopener">VS Code documentation on MCP servers</a>. The badges are powered by Shields.io for consistent, professional appearance.</p>
                 
                 <p>The tool is completely free, open-source, and runs entirely in your browser - no data is sent to any servers.</p>
                 
@@ -1429,6 +1429,7 @@
             // Input field listeners
             elements.mcpName.addEventListener('input', function() {
                 state.mcpName = this.value;
+                updateConfig();
                 updateOutput();
             });
 
