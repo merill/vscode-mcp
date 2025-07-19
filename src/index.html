@@ -148,6 +148,25 @@
             opacity: 0.8;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .about-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: opacity 0.2s ease;
+            cursor: pointer;
+        }
+
+        .about-link:hover {
+            opacity: 0.8;
+        }
+
         .social-links {
             display: flex;
             gap: 20px;
@@ -699,6 +718,140 @@
             height: 1px;
             overflow: hidden;
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            position: relative;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-content {
+            padding: 40px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .modal h3 {
+            color: #0078d4;
+            margin: 25px 0 15px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .modal p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .modal a {
+            color: #0078d4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .modal a:hover {
+            text-decoration: underline;
+        }
+
+        .modal ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .modal li {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 3px solid rgba(0, 120, 212, 0.2);
+        }
+
+        .profile-text {
+            flex: 1;
+        }
+
+        @media (max-width: 480px) {
+            .profile-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -706,12 +859,15 @@
     <nav class="top-nav">
         <a href="https://merill.net" class="nav-brand" target="_blank" rel="noopener">merill.net</a>
         
-        <div class="social-links">
-            <a href="https://x.com/merill" class="social-link" target="_blank" rel="noopener" aria-label="X (Twitter)">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-            </a>
+        <div class="nav-right">
+            <a href="#" class="about-link" id="aboutBtn">About</a>
+            
+            <div class="social-links">
+                <a href="https://x.com/merill" class="social-link" target="_blank" rel="noopener" aria-label="X (Twitter)">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
             
             <a href="https://linkedin.com/in/merill" class="social-link" target="_blank" rel="noopener" aria-label="LinkedIn">
                 <svg class="social-icon" viewBox="0 0 24 24">
@@ -915,6 +1071,46 @@
         <p>VS Code extension, MCP server, Model Context Protocol, install button creator, VS Code button generator, MCP link builder, extension install badge, VS Code tools, developer tools, MCP configuration, stdio MCP, HTTP MCP, SSE MCP, Visual Studio Code integration</p>
     </div>
 
+    <!-- About Modal -->
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">&times;</button>
+            
+            <div class="modal-content">
+                <h2>About This Tool</h2>
+                
+                <h3>My Story</h3>
+                <div class="profile-section">
+                    <img src="img/merill-profile.jpeg" alt="Merill Fernando" class="profile-image">
+                    <div class="profile-text">
+                        <p>Hi! I'm Merill, and I'm passionate about building tools that make developers' lives easier. As an MCP (Model Context Protocol) Server creator, I built one of the first Microsoft 365 MCP Servers <a href="https://lokka.dev" target="_blank" rel="noopener">(Lokka)</a>.</p>
+                        
+                        <p>When I wanted to add professional VS Code install buttons to my MCP projects' web pages and GitHub README files, I couldn't find a simple online tool that made it easy to create and test these badges. So, I did what any developer would do - I built one myself!</p>
+                    </div>
+                </div>
+                
+                <h3>What This Tool Does</h3>
+                <p>This VS Code MCP Install Button Generator helps you create beautiful, professional install buttons for your Model Context Protocol servers. Whether you're building MCP extensions, integrations, or tools, this generator makes it simple to:</p>
+                
+                <ul>
+                    <li>Configure your MCP server settings (stdio or HTTP/SSE)</li>
+                    <li>Customize badge appearance with colors and styles</li>
+                    <li>Generate real-time previews</li>
+                    <li>Export as Markdown or HTML code</li>
+                    <li>Copy ready-to-use code to your clipboard</li>
+                </ul>
+                
+                <h3>Technical Details</h3>
+                <p>This tool generates install links based on <a href="https://code.visualstudio.com/api/extension-guides/ai/mcp" target="_blank" rel="noopener">Microsoft's official guidance</a> for Model Context Protocol integration with VS Code. The badges are powered by Shields.io for consistent, professional appearance.</p>
+                
+                <p>The tool is completely free, open-source, and runs entirely in your browser - no data is sent to any servers.</p>
+                
+                <h3>Get Started</h3>
+                <p>Simply configure your MCP server details in the Configuration tab, customize your button in the Badge Customization tab, and copy the generated code to use in your projects!</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // State management
         let state = {
@@ -955,6 +1151,37 @@
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // About modal handling
+            const aboutBtn = document.getElementById('aboutBtn');
+            const aboutModal = document.getElementById('aboutModal');
+            const closeModal = document.getElementById('closeModal');
+
+            aboutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                aboutModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeModal.addEventListener('click', function() {
+                aboutModal.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            aboutModal.addEventListener('click', function(e) {
+                if (e.target === aboutModal) {
+                    aboutModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Escape key to close modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && aboutModal.classList.contains('active')) {
+                    aboutModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
             // Tab switching
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
