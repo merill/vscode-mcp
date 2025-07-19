@@ -85,15 +85,16 @@
         }
 
         .main-panel {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.25);
             padding: 40px;
             overflow-y: auto;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
             margin: 20px;
             margin-right: 10px;
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .preview-panel {
@@ -200,20 +201,49 @@
         }
 
         .header {
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: -40px -40px 40px -40px;
+            padding: 50px 40px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 300;
-            color: #333;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.02em;
         }
 
         .header p {
-            font-size: 1.1rem;
-            color: #666;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
 
         .main-content {
@@ -226,6 +256,13 @@
             display: flex;
             flex-direction: column;
             gap: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 30px;
+            border-radius: 16px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
@@ -244,17 +281,22 @@
         .form-group textarea,
         .form-group select {
             padding: 12px 16px;
-            border: 2px solid #e1e5e9;
+            border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.2s ease;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.7);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #0078d4;
+            border-color: rgba(0, 120, 212, 0.6);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
         }
 
         .form-group textarea {
@@ -265,10 +307,13 @@
 
         .config-mode-toggle {
             display: flex;
-            background: #f5f5f5;
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             padding: 4px;
             gap: 4px;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         .config-mode-btn {
@@ -305,12 +350,14 @@
 
         .config-type-btn {
             padding: 8px 16px;
-            border: 2px solid #e1e5e9;
-            background: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.2s ease;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
         }
 
         .config-type-btn.active {
@@ -337,12 +384,14 @@
 
         .style-btn {
             padding: 6px 12px;
-            border: 2px solid #e1e5e9;
-            background: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.85rem;
             transition: all 0.2s ease;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
         }
 
         .style-btn.active {
@@ -366,10 +415,11 @@
         .section-title {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #333;
+            color: #2d3748;
             margin-bottom: 20px;
-            border-bottom: 2px solid #e1e5e9;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.6);
             padding-bottom: 8px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         @media (max-width: 1024px) {
@@ -433,8 +483,18 @@
                 padding: 20px;
             }
 
+            .header {
+                margin: -20px -20px 30px -20px;
+                padding: 40px 20px;
+                border-radius: 16px 16px 0 0;
+            }
+
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
             }
 
             .style-options {
@@ -485,8 +545,10 @@
         <!-- Main Panel with Form -->
         <div class="main-panel">
             <div class="header">
-                <h1>VS Code MCP Install Link Creator</h1>
-                <p>Generate beautiful install buttons for your Model Context Protocol servers</p>
+                <div class="header-content">
+                    <h1>VS Code MCP Install Link Creator</h1>
+                    <p>Generate beautiful install buttons for your Model Context Protocol servers</p>
+                </div>
             </div>
 
             <div class="main-content">
