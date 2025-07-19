@@ -996,7 +996,7 @@
                             <div class="form-group" id="simpleConfig">
                                 <label for="configText">Configuration JSON</label>
                                 <small class="field-description">Raw JSON configuration for your MCP server connection</small>
-                                <textarea id="configText" placeholder='{"type":"http","url":"https://learn.microsoft.com/api/mcp"}'>{"type":"http","url":"https://learn.microsoft.com/api/mcp"}</textarea>
+                                <textarea id="configText" placeholder='{"microsoft.docs.mcp":{"type":"http","url":"https://learn.microsoft.com/api/mcp"}}'>{"microsoft.docs.mcp":{"type":"http","url":"https://learn.microsoft.com/api/mcp"}}</textarea>
                             </div>
 
                             <!-- Enhanced Config -->
@@ -1179,8 +1179,10 @@
             configMode: 'enhanced',
             configType: 'http',
             config: {
-                type: 'http',
-                url: 'https://learn.microsoft.com/api/mcp'
+                'microsoft.docs.mcp': {
+                    type: 'http',
+                    url: 'https://learn.microsoft.com/api/mcp'
+                }
             },
             badgeText: 'Install Microsoft Docs MCP',
             badgeColor: '#0098FF',
@@ -1398,7 +1400,7 @@
                     }
                 }
                 
-                state.config = config;
+                state.config = { [state.mcpName]: config };
             } else {
                 const config = { type: state.configType };
                 
@@ -1411,7 +1413,7 @@
                     }
                 }
                 
-                state.config = config;
+                state.config = { [state.mcpName]: config };
             }
         }
 
