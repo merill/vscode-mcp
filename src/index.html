@@ -1112,7 +1112,8 @@
                                     <div class="enhanced-config active" id="enhancedConfig">
                                         <div class="config-type-selector">
                                             <button class="config-type-btn" data-type="stdio">stdio</button>
-                                            <button class="config-type-btn active" data-type="http">http/sse</button>
+                                            <button class="config-type-btn active" data-type="http">http</button>
+                                            <button class="config-type-btn" data-type="sse">sse</button>
                                         </div>
 
                                         <!-- stdio fields -->
@@ -1145,6 +1146,20 @@
                                                 <label for="headers">Headers (JSON)</label>
                                                 <small class="field-description">Optional HTTP headers for authentication or configuration (optional)</small>
                                                 <textarea id="headers" placeholder='{"Authorization": "Bearer ${input:token}"}'></textarea>
+                                            </div>
+                                        </div>
+
+                                        <!-- sse fields -->
+                                        <div class="config-fields" id="sseFields">
+                                            <div class="form-group">
+                                                <label for="sseUrl">Server URL</label>
+                                                <small class="field-description">The SSE endpoint where your MCP server is hosted</small>
+                                                <input type="url" id="sseUrl" placeholder="https://example.com/sse/mcp">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="sseHeaders">Headers (JSON)</label>
+                                                <small class="field-description">Optional HTTP headers for authentication or configuration (optional)</small>
+                                                <textarea id="sseHeaders" placeholder='{"Authorization": "Bearer ${input:token}"}'></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1324,8 +1339,11 @@
             env: document.getElementById('env'),
             url: document.getElementById('url'),
             headers: document.getElementById('headers'),
+            sseUrl: document.getElementById('sseUrl'),
+            sseHeaders: document.getElementById('sseHeaders'),
             stdioFields: document.getElementById('stdioFields'),
             httpFields: document.getElementById('httpFields'),
+            sseFields: document.getElementById('sseFields'),
             badgeText: document.getElementById('badgeText'),
             badgeColor: document.getElementById('badgeColor'),
             logoColor: document.getElementById('logoColor'),
@@ -1395,8 +1413,10 @@
                     document.querySelectorAll('.config-fields').forEach(f => f.classList.remove('active'));
                     if (state.configType === 'stdio') {
                         elements.stdioFields.classList.add('active');
-                    } else {
+                    } else if (state.configType === 'http') {
                         elements.httpFields.classList.add('active');
+                    } else if (state.configType === 'sse') {
+                        elements.sseFields.classList.add('active');
                     }
                     
                     updateConfig();
@@ -1463,7 +1483,7 @@
             });
 
             // Enhanced config field listeners
-            [elements.command, elements.args, elements.env, elements.url, elements.headers].forEach(el => {
+            [elements.command, elements.args, elements.env, elements.url, elements.headers, elements.sseUrl, elements.sseHeaders].forEach(el => {
                 if (el) {
                     el.addEventListener('input', function() {
                         updateConfig();
@@ -1506,13 +1526,26 @@
                 }
                 
                 state.config = { [state.mcpName]: config };
-            } else {
-                const config = { type: state.configType };
+            } else if (state.configType === 'http') {
+                const config = { type: 'http' };
                 
                 if (elements.url.value) config.url = elements.url.value;
                 if (elements.headers.value) {
                     try {
                         config.headers = JSON.parse(elements.headers.value);
+                    } catch (e) {
+                        // Invalid JSON, skip headers
+                    }
+                }
+                
+                state.config = { [state.mcpName]: config };
+            } else if (state.configType === 'sse') {
+                const config = { type: 'sse' };
+                
+                if (elements.sseUrl.value) config.url = elements.sseUrl.value;
+                if (elements.sseHeaders.value) {
+                    try {
+                        config.headers = JSON.parse(elements.sseHeaders.value);
                     } catch (e) {
                         // Invalid JSON, skip headers
                     }
