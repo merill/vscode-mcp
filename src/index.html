@@ -1342,9 +1342,9 @@
                                                 <input type="text" id="command" placeholder="Enter custom command" class="command-custom-input">
                                             </div>
                                             <div class="form-group">
-                                                <label for="args">Arguments (comma-separated)</label>
-                                                <small class="field-description">Command-line arguments to pass to your MCP server executable</small>
-                                                <input type="text" id="args" placeholder="e.g., -y, mcp-server-name">
+                                                <label for="args">Arguments (one per line)</label>
+                                                <small class="field-description">Command-line arguments to pass to your MCP server executable (one argument per line)</small>
+                                                <textarea id="args" placeholder="-y&#10;mcp-server-name&#10;--config&#10;./config.json"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="env">Environment Variables (JSON)</label>
@@ -1737,7 +1737,7 @@
                     // Update stdio fields
                     const commandValue = config.command || state.command;
                     elements.command.value = commandValue;
-                    elements.args.value = config.args ? config.args.join(', ') : '';
+                    elements.args.value = config.args ? config.args.join('\n') : '';
                     elements.env.value = config.env ? JSON.stringify(config.env, null, 2) : '';
                     
                     // Update command type buttons
@@ -1775,7 +1775,7 @@
                 
                 if (elements.command.value) config.command = elements.command.value;
                 if (elements.args.value) {
-                    config.args = elements.args.value.split(',').map(arg => arg.trim()).filter(arg => arg);
+                    config.args = elements.args.value.split('\n').map(arg => arg.trim()).filter(arg => arg);
                 }
                 if (elements.env.value) {
                     try {
