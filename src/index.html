@@ -311,6 +311,52 @@
             white-space: pre-wrap;
             word-break: break-all;
             margin-bottom: 16px;
+            position: relative;
+        }
+
+        /* Syntax highlighting for generated code */
+        .code-output .syntax-markdown-link {
+            color: #81C784; /* Green for markdown link syntax */
+        }
+
+        .code-output .syntax-markdown-text {
+            color: #90CAF9; /* Light blue for markdown link text */
+        }
+
+        .code-output .syntax-markdown-url {
+            color: #FFCC02; /* Yellow for URLs */
+        }
+
+        .code-output .syntax-url-base {
+            color: #FFCC02; /* Yellow for base URL */
+        }
+
+        .code-output .syntax-url-param-name {
+            color: #FFA726; /* Orange for URL parameter names */
+        }
+
+        .code-output .syntax-url-param-value {
+            color: #64B5F6; /* Light blue for URL parameter values */
+        }
+
+        .code-output .syntax-url-separator {
+            color: #E0E0E0; /* Light gray for URL separators (?, &, =) */
+        }
+
+        .code-output .syntax-html-tag {
+            color: #F8BBD0; /* Pink for HTML tags */
+        }
+
+        .code-output .syntax-html-attr {
+            color: #B39DDB; /* Purple for HTML attributes */
+        }
+
+        .code-output .syntax-html-value {
+            color: #FFCC02; /* Yellow for HTML attribute values */
+        }
+
+        .code-output .syntax-html-text {
+            color: #e2e8f0; /* Default color for HTML text content */
         }
 
         .copy-btn {
@@ -1459,6 +1505,10 @@
                     <button class="output-btn active" data-format="markdown">Markdown</button>
                     <button class="output-btn" data-format="html">HTML</button>
                 </div>
+                
+                <p style="color: #666; font-size: 0.9rem; margin: 10px 0; line-height: 1.4;">
+                    Copy this code to insert the install button in your website, documentation, or GitHub README files.
+                </p>
 
                 <div class="code-output" id="generatedCode">
                     <!-- Generated code will appear here -->
@@ -1756,7 +1806,8 @@
 
             // Copy button
             elements.copyBtn.addEventListener('click', function() {
-                navigator.clipboard.writeText(elements.generatedCode.textContent).then(() => {
+                const textToCopy = elements.generatedCode.dataset.plainText || elements.generatedCode.textContent;
+                navigator.clipboard.writeText(textToCopy).then(() => {
                     this.textContent = 'Copied!';
                     this.classList.add('copied');
                     setTimeout(() => {
@@ -1921,6 +1972,84 @@
             return `https://img.shields.io/badge/VS_Code-${encodeURIComponent(text)}-${validColor}?style=${state.badgeStyle}&logo=visualstudiocode&logoColor=ffffff`;
         }
 
+        function highlightURL(url) {
+            // Split URL into base and parameters
+            const urlParts = url.split('?');
+            if (urlParts.length === 1) {
+                // No parameters, just return the base URL
+                return `<span class="syntax-url-base">${url}</span>`;
+            }
+            
+            const baseUrl = urlParts[0];
+            const paramString = urlParts[1];
+            
+            let highlightedUrl = `<span class="syntax-url-base">${baseUrl}</span><span class="syntax-url-separator">?</span>`;
+            
+            // Highlight each parameter
+            const params = paramString.split('&amp;');
+            for (let i = 0; i < params.length; i++) {
+                if (i > 0) {
+                    highlightedUrl += '<span class="syntax-url-separator">&amp;</span>';
+                }
+                
+                const param = params[i];
+                const equalIndex = param.indexOf('=');
+                if (equalIndex !== -1) {
+                    const paramName = param.substring(0, equalIndex);
+                    const paramValue = param.substring(equalIndex + 1);
+                    highlightedUrl += `<span class="syntax-url-param-name">${paramName}</span><span class="syntax-url-separator">=</span><span class="syntax-url-param-value">${paramValue}</span>`;
+                } else {
+                    highlightedUrl += `<span class="syntax-url-param-name">${param}</span>`;
+                }
+            }
+            
+            return highlightedUrl;
+        }
+
+        function highlightMarkdown(code) {
+            // Escape HTML entities first
+            const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Highlight markdown link syntax: [![text](url)](link)
+            return escaped.replace(
+                /(\[!)(\[.*?\])(\()([^)]+)(\))(\])(\()([^)]+)(\))/g,
+                function(match, p1, p2, p3, imageUrl, p5, p6, p7, linkUrl, p9) {
+                    const highlightedImageUrl = highlightURL(imageUrl);
+                    const highlightedLinkUrl = highlightURL(linkUrl);
+                    return `<span class="syntax-markdown-link">${p1}</span><span class="syntax-markdown-text">${p2}</span><span class="syntax-markdown-link">${p3}</span>${highlightedImageUrl}<span class="syntax-markdown-link">${p5}${p6}${p7}</span>${highlightedLinkUrl}<span class="syntax-markdown-link">${p9}</span>`;
+                }
+            );
+        }
+
+        function highlightHTML(code) {
+            // Escape HTML entities first
+            let escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Highlight HTML tags, attributes, and values
+            escaped = escaped.replace(
+                /(&lt;\/?)([a-zA-Z][a-zA-Z0-9]*)(.*?)(&gt;)/g,
+                function(match, openTag, tagName, attributes, closeTag) {
+                    // Highlight attributes within the tag
+                    const highlightedAttributes = attributes.replace(
+                        /(\s+)([a-zA-Z-]+)(=)(&quot;)([^&]*?)(&quot;|&#x27;[^&#]*&#x27;)/g,
+                        function(attrMatch, space, attrName, equals, openQuote, attrValue, closeQuote) {
+                            // Check if this is a URL attribute (href, src)
+                            if (attrName === 'href' || attrName === 'src') {
+                                const highlightedUrl = highlightURL(attrValue);
+                                return `${space}<span class="syntax-html-attr">${attrName}</span>${equals}<span class="syntax-html-value">${openQuote}${highlightedUrl}${closeQuote}</span>`;
+                            } else {
+                                return `${space}<span class="syntax-html-attr">${attrName}</span>${equals}<span class="syntax-html-value">${openQuote}${attrValue}${closeQuote}</span>`;
+                            }
+                        }
+                    );
+                    
+                    return `<span class="syntax-html-tag">${openTag}${tagName}</span>${highlightedAttributes}<span class="syntax-html-tag">${closeTag}</span>`;
+                }
+            );
+            
+            return escaped;
+        }
+
         function updateOutput() {
             const installUrl = generateInstallUrl();
             const badgeUrl = generateBadgeUrl();
@@ -1931,13 +2060,19 @@
 
             // Generate code
             let code;
+            let highlightedCode;
             if (state.outputFormat === 'markdown') {
                 code = `[![Install in VS Code](${badgeUrl})](${installUrl})`;
+                highlightedCode = highlightMarkdown(code);
             } else {
                 code = `<a href="${installUrl}"><img src="${badgeUrl}" alt="Install in VS Code"></a>`;
+                highlightedCode = highlightHTML(code);
             }
 
-            elements.generatedCode.textContent = code;
+            // Store the plain text for copying
+            elements.generatedCode.dataset.plainText = code;
+            // Display the highlighted version
+            elements.generatedCode.innerHTML = highlightedCode;
         }
     </script>
 </body>
