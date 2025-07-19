@@ -1457,6 +1457,7 @@
                 try {
                     const parsed = JSON.parse(this.value);
                     state.config = parsed;
+                    updateFormFromConfig();
                     updateOutput();
                 } catch (e) {
                     // Invalid JSON, keep previous config
@@ -1508,6 +1509,58 @@
             updateOutput();
             formatJSON(); // Format the initial JSON
         });
+
+        function updateFormFromConfig() {
+            // Get the first MCP server config from state.config
+            const configKeys = Object.keys(state.config);
+            if (configKeys.length === 0) return;
+            
+            const mcpName = configKeys[0];
+            const config = state.config[mcpName];
+            
+            // Update MCP name
+            state.mcpName = mcpName;
+            elements.mcpName.value = mcpName;
+            
+            // Update config type and show appropriate fields
+            if (config.type) {
+                state.configType = config.type;
+                
+                // Update active config type button
+                document.querySelectorAll('.config-type-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.type === config.type) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Show appropriate config fields
+                document.querySelectorAll('.config-fields').forEach(f => f.classList.remove('active'));
+                
+                if (config.type === 'stdio') {
+                    elements.stdioFields.classList.add('active');
+                    
+                    // Update stdio fields
+                    elements.command.value = config.command || '';
+                    elements.args.value = config.args ? config.args.join(', ') : '';
+                    elements.env.value = config.env ? JSON.stringify(config.env, null, 2) : '';
+                    
+                } else if (config.type === 'http') {
+                    elements.httpFields.classList.add('active');
+                    
+                    // Update http fields
+                    elements.url.value = config.url || '';
+                    elements.headers.value = config.headers ? JSON.stringify(config.headers, null, 2) : '';
+                    
+                } else if (config.type === 'sse') {
+                    elements.sseFields.classList.add('active');
+                    
+                    // Update sse fields
+                    elements.sseUrl.value = config.url || '';
+                    elements.sseHeaders.value = config.headers ? JSON.stringify(config.headers, null, 2) : '';
+                }
+            }
+        }
 
         function updateConfig() {
             if (state.configType === 'stdio') {
