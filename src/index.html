@@ -7,7 +7,7 @@
     <!-- Primary Meta Tags -->
     <title>VS Code MCP Install Button Generator | Create Install Links for Model Context Protocol Servers</title>
     <meta name="title" content="VS Code MCP Install Button Generator | Create Install Links for Model Context Protocol Servers">
-    <meta name="description" content="Free online tool to generate beautiful VS Code install buttons and links for Model Context Protocol (MCP) servers. Create custom badges, configure stdio/http connections, and build professional install buttons for your MCP projects.">
+    <meta name="description" content="Free online tool to generate beautiful one-click VS Code install buttons and links for Model Context Protocol (MCP) servers. Create custom badges, configure stdio/http connections, and build professional install buttons for your MCP projects.">
     <meta name="keywords" content="VS Code MCP, Model Context Protocol, MCP install button, VS Code extension install, MCP server generator, VS Code button creator, MCP link builder, install badge generator, VS Code MCP setup, Model Context Protocol tools">
     <meta name="author" content="Merill Fernando">
     <meta name="robots" content="index, follow">
@@ -52,7 +52,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "VS Code MCP Install Button Generator",
-        "description": "Free online tool to generate beautiful VS Code install buttons and links for Model Context Protocol (MCP) servers. Create custom badges, configure stdio/http connections, and build professional install buttons for your MCP projects.",
+        "description": "Free online tool to generate beautiful one-click VS Code install buttons and links for Model Context Protocol (MCP) servers. Create custom badges, configure stdio/http connections, and build professional install buttons for your MCP projects.",
         "url": "https://vscodemcp.com/",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
@@ -1189,7 +1189,7 @@
                         </svg>
                         VS Code MCP Install Button Generator
                     </h1>
-                    <p>Generate beautiful install buttons for your Model Context Protocol servers</p>
+                    <p>Generate beautiful one-click install buttons for your Model Context Protocol servers</p>
                 </div>
             </div>
 
@@ -1350,6 +1350,18 @@
                                                             <path d="M9 9h6v6H9z" fill="#512BD4" opacity="0.3"/>
                                                         </svg>
                                                         dotnet
+                                                    </button>
+                                                    <button class="command-type-btn" data-command="docker">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2496ED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <rect x="3" y="3" width="4" height="4" rx="1"/>
+                                                            <rect x="9" y="3" width="4" height="4" rx="1"/>
+                                                            <rect x="15" y="3" width="4" height="4" rx="1"/>
+                                                            <rect x="3" y="9" width="4" height="4" rx="1"/>
+                                                            <rect x="9" y="9" width="4" height="4" rx="1"/>
+                                                            <rect x="15" y="9" width="4" height="4" rx="1"/>
+                                                            <rect x="9" y="15" width="4" height="4" rx="1"/>
+                                                        </svg>
+                                                        docker
                                                     </button>
                                                     <button class="command-type-btn" data-command="custom">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1654,6 +1666,9 @@
                                 case 'dotnet':
                                     placeholderText = 'run\n--project\n<RELATIVE PATH TO PROJECT DIRECTORY>';
                                     break;
+                                case 'docker':
+                                    placeholderText = 'run\n--rm\n-it\nmcp-server-image';
+                                    break;
                                 default:
                                     placeholderText = 'Enter arguments\none per line';
                             }
@@ -1802,7 +1817,7 @@
                         if (btn.dataset.command === commandValue) {
                             btn.classList.add('active');
                             elements.command.classList.remove('active');
-                        } else if (btn.dataset.command === 'custom' && !['npx', 'node', 'uv', 'python', 'cmd', 'dotnet'].includes(commandValue)) {
+                        } else if (btn.dataset.command === 'custom' && !['npx', 'node', 'uv', 'python', 'cmd', 'dotnet', 'docker'].includes(commandValue)) {
                             btn.classList.add('active');
                             elements.command.classList.add('active');
                         }
