@@ -1313,14 +1313,14 @@
                                                         </svg>
                                                         node
                                                     </button>
-                                                    <button class="command-type-btn" data-command="python">
+                                                    <button class="command-type-btn" data-command="uv">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3776AB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                             <path d="M8 3C6.5 3 5 4.5 5 6v4c0 1.5 1.5 3 3 3h4c1.5 0 3-1.5 3-3V6c0-1.5-1.5-3-3-3H8Z"/>
                                                             <path d="M16 11c1.5 0 3 1.5 3 3v4c0 1.5-1.5 3-3 3h-4c-1.5 0-3-1.5-3-3v-4c0-1.5 1.5-3 3-3h4Z"/>
                                                             <circle cx="8.5" cy="6.5" r="0.5" fill="#3776AB"/>
                                                             <circle cx="15.5" cy="17.5" r="0.5" fill="#3776AB"/>
                                                         </svg>
-                                                        python
+                                                        python (uv)
                                                     </button>
                                                     <button class="command-type-btn" data-command="cmd">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0078D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1746,7 +1746,7 @@
                         if (btn.dataset.command === commandValue) {
                             btn.classList.add('active');
                             elements.command.classList.remove('active');
-                        } else if (btn.dataset.command === 'custom' && !['npx', 'node', 'python', 'cmd'].includes(commandValue)) {
+                        } else if (btn.dataset.command === 'custom' && !['npx', 'node', 'uv', 'cmd'].includes(commandValue)) {
                             btn.classList.add('active');
                             elements.command.classList.add('active');
                         }
