@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VS Code MCP Install Link Creator</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3cdefs%3e%3clinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3e%3cstop offset='0%25' style='stop-color:%23667eea'/%3e%3cstop offset='100%25' style='stop-color:%23764ba2'/%3e%3c/linearGradient%3e%3c/defs%3e%3crect width='100' height='100' rx='20' fill='url(%23grad)'/%3e%3cpath d='M25 35h50v5H25z' fill='white' opacity='0.9'/%3e%3cpath d='M25 45h35v3H25z' fill='white' opacity='0.7'/%3e%3cpath d='M25 52h40v3H25z' fill='white' opacity='0.7'/%3e%3cpath d='M25 59h25v3H25z' fill='white' opacity='0.7'/%3e%3ccircle cx='75' cy='75' r='12' fill='white' opacity='0.2'/%3e%3cpath d='M69 75h12M75 69v12' stroke='white' stroke-width='2' opacity='0.9'/%3e%3cpath d='M20 70l8 5-8 5z' fill='%230078d4'/%3e%3c/svg%3e">
     <style>
         * {
             margin: 0;
@@ -235,6 +236,16 @@
             color: white;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
         }
 
         .header p {
@@ -492,6 +503,13 @@
 
             .header h1 {
                 font-size: 2.2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .header-icon {
+                width: 40px;
+                height: 40px;
             }
 
             .header p {
@@ -549,7 +567,25 @@
         <div class="main-panel">
             <div class="header">
                 <div class="header-content">
-                    <h1>VS Code MCP Install Link Creator</h1>
+                    <h1>
+                        <svg class="header-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.9"/>
+                                    <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.7"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="100" height="100" rx="20" fill="url(#headerGrad)" opacity="0.9"/>
+                            <path d="M25 35h50v5H25z" fill="#0078d4" opacity="0.8"/>
+                            <path d="M25 45h35v3H25z" fill="#0078d4" opacity="0.6"/>
+                            <path d="M25 52h40v3H25z" fill="#0078d4" opacity="0.6"/>
+                            <path d="M25 59h25v3H25z" fill="#0078d4" opacity="0.6"/>
+                            <circle cx="75" cy="75" r="12" fill="#0078d4" opacity="0.3"/>
+                            <path d="M69 75h12M75 69v12" stroke="#0078d4" stroke-width="2" opacity="0.8"/>
+                            <path d="M20 70l8 5-8 5z" fill="#28a745"/>
+                        </svg>
+                        VS Code MCP Install Link Creator
+                    </h1>
                     <p>Generate beautiful install buttons for your Model Context Protocol servers</p>
                 </div>
             </div>
