@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code MCP Install Link Creator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-overscroll-behavior: none;
+            overscroll-behavior: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            -webkit-overscroll-behavior: none;
+            overscroll-behavior: none;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            min-height: 100vh;
+        }
+
+        .main-panel {
+            background: white;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .preview-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .preview-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-section h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .badge-preview {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .code-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .output-toggle {
+            display: flex;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .output-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .output-btn.active {
+            background: #0078d4;
+            color: white;
+        }
+
+        .code-output {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 16px;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            width: 100%;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .copy-btn.copied {
+            background: #007bff;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+            color: #333;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0078d4;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .config-mode-toggle {
+            display: flex;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .config-mode-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .config-mode-btn.active {
+            background: #0078d4;
+            color: white;
+        }
+
+        .enhanced-config {
+            display: none;
+            gap: 20px;
+        }
+
+        .enhanced-config.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .config-type-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .config-type-btn {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .config-type-btn.active {
+            border-color: #0078d4;
+            background: #0078d4;
+            color: white;
+        }
+
+        .config-fields {
+            display: none;
+            gap: 16px;
+        }
+
+        .config-fields.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .style-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .style-btn {
+            padding: 6px 12px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .style-btn.active {
+            border-color: #0078d4;
+            background: #0078d4;
+            color: white;
+        }
+
+        .color-input-wrapper {
+            position: relative;
+        }
+
+        .color-input {
+            width: 50px;
+            height: 40px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 8px;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto;
+            }
+
+            .preview-panel {
+                position: static;
+                height: auto;
+                padding: 30px;
+                order: -1;
+            }
+
+            .main-panel {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-panel {
+                padding: 20px;
+            }
+
+            .preview-panel {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .style-options {
+                justify-content: center;
+            }
+        }
+
+        .field-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .field-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Panel with Form -->
+        <div class="main-panel">
+            <div class="header">
+                <h1>VS Code MCP Install Link Creator</h1>
+                <p>Generate beautiful install buttons for your Model Context Protocol servers</p>
+            </div>
+
+            <div class="main-content">
+                <!-- Configuration Section -->
+                <div class="form-section">
+                    <div class="section-title">Configuration</div>
+
+                    <!-- MCP Name -->
+                    <div class="form-group">
+                        <label for="mcpName">MCP Server Name</label>
+                        <input type="text" id="mcpName" placeholder="e.g., microsoft.docs.mcp" value="microsoft.docs.mcp">
+                    </div>
+
+                    <!-- Config Mode Toggle -->
+                    <div class="form-group">
+                        <label>Configuration Mode</label>
+                        <div class="config-mode-toggle">
+                            <button class="config-mode-btn" data-mode="simple">Simple</button>
+                            <button class="config-mode-btn active" data-mode="enhanced">Enhanced</button>
+                        </div>
+                    </div>
+
+                    <!-- Simple Config -->
+                    <div class="form-group" id="simpleConfig">
+                        <label for="configText">Configuration JSON</label>
+                        <textarea id="configText" placeholder='{"type":"http","url":"https://learn.microsoft.com/api/mcp"}'>{"type":"http","url":"https://learn.microsoft.com/api/mcp"}</textarea>
+                    </div>
+
+                    <!-- Enhanced Config -->
+                    <div class="enhanced-config active" id="enhancedConfig">
+                        <div class="config-type-selector">
+                            <button class="config-type-btn" data-type="stdio">stdio</button>
+                            <button class="config-type-btn active" data-type="http">http/sse</button>
+                        </div>
+
+                        <!-- stdio fields -->
+                        <div class="config-fields" id="stdioFields">
+                            <div class="form-group">
+                                <label for="command">Command</label>
+                                <input type="text" id="command" placeholder="e.g., npx, python, node">
+                            </div>
+                            <div class="form-group">
+                                <label for="args">Arguments (comma-separated)</label>
+                                <input type="text" id="args" placeholder="e.g., -y, mcp-server-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="env">Environment Variables (JSON)</label>
+                                <textarea id="env" placeholder='{"API_KEY": "${input:api-key}"}'></textarea>
+                            </div>
+                        </div>
+
+                        <!-- http/sse fields -->
+                        <div class="config-fields active" id="httpFields">
+                            <div class="form-group">
+                                <label for="url">Server URL</label>
+                                <input type="url" id="url" placeholder="https://learn.microsoft.com/api/mcp" value="https://learn.microsoft.com/api/mcp">
+                            </div>
+                            <div class="form-group">
+                                <label for="headers">Headers (JSON)</label>
+                                <textarea id="headers" placeholder='{"Authorization": "Bearer ${input:token}"}'></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badge Customization Section -->
+                <div class="form-section">
+                    <div class="section-title">Badge Customization</div>
+
+                    <div class="form-group">
+                        <label for="badgeText">Badge Text</label>
+                        <input type="text" id="badgeText" placeholder="Install Microsoft Docs MCP" value="Install Microsoft Docs MCP">
+                    </div>
+
+                    <div class="field-group">
+                        <div class="form-group">
+                            <label for="badgeColor">Badge Color</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="badgeColor" class="color-input" value="#0098FF">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="logoColor">Logo Color</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="logoColor" class="color-input" value="#ffffff">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Badge Style</label>
+                        <div class="style-options">
+                            <button class="style-btn" data-style="flat">flat</button>
+                            <button class="style-btn active" data-style="flat-square">flat-square</button>
+                            <button class="style-btn" data-style="plastic">plastic</button>
+                            <button class="style-btn" data-style="for-the-badge">for-the-badge</button>
+                            <button class="style-btn" data-style="social">social</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <!-- Live Preview Section -->
+            <div class="preview-section">
+                <h2>Live Preview</h2>
+                <div class="badge-preview" id="badgePreview">
+                    <!-- Badge preview will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Generated Code Section -->
+            <div class="code-section">
+                <div class="output-toggle">
+                    <button class="output-btn active" data-format="markdown">Markdown</button>
+                    <button class="output-btn" data-format="html">HTML</button>
+                </div>
+
+                <div class="code-output" id="generatedCode">
+                    <!-- Generated code will appear here -->
+                </div>
+
+                <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let state = {
+            mcpName: 'microsoft.docs.mcp',
+            configMode: 'enhanced',
+            configType: 'http',
+            config: {
+                type: 'http',
+                url: 'https://learn.microsoft.com/api/mcp'
+            },
+            badgeText: 'Install Microsoft Docs MCP',
+            badgeColor: '#0098FF',
+            logoColor: '#ffffff',
+            badgeStyle: 'flat-square',
+            outputFormat: 'markdown'
+        };
+
+        // DOM elements
+        const elements = {
+            mcpName: document.getElementById('mcpName'),
+            configText: document.getElementById('configText'),
+            simpleConfig: document.getElementById('simpleConfig'),
+            enhancedConfig: document.getElementById('enhancedConfig'),
+            command: document.getElementById('command'),
+            args: document.getElementById('args'),
+            env: document.getElementById('env'),
+            url: document.getElementById('url'),
+            headers: document.getElementById('headers'),
+            stdioFields: document.getElementById('stdioFields'),
+            httpFields: document.getElementById('httpFields'),
+            badgeText: document.getElementById('badgeText'),
+            badgeColor: document.getElementById('badgeColor'),
+            logoColor: document.getElementById('logoColor'),
+            badgePreview: document.getElementById('badgePreview'),
+            generatedCode: document.getElementById('generatedCode'),
+            copyBtn: document.getElementById('copyBtn')
+        };
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Config mode toggle
+            document.querySelectorAll('.config-mode-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.config-mode-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    state.configMode = this.dataset.mode;
+                    
+                    if (state.configMode === 'simple') {
+                        elements.simpleConfig.style.display = 'flex';
+                        elements.enhancedConfig.classList.remove('active');
+                    } else {
+                        elements.simpleConfig.style.display = 'none';
+                        elements.enhancedConfig.classList.add('active');
+                    }
+                    
+                    updateOutput();
+                });
+            });
+
+            // Config type toggle
+            document.querySelectorAll('.config-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.config-type-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    state.configType = this.dataset.type;
+                    
+                    document.querySelectorAll('.config-fields').forEach(f => f.classList.remove('active'));
+                    if (state.configType === 'stdio') {
+                        elements.stdioFields.classList.add('active');
+                    } else {
+                        elements.httpFields.classList.add('active');
+                    }
+                    
+                    updateConfig();
+                    updateOutput();
+                });
+            });
+
+            // Style toggle
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    state.badgeStyle = this.dataset.style;
+                    updateOutput();
+                });
+            });
+
+            // Output format toggle
+            document.querySelectorAll('.output-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.output-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    state.outputFormat = this.dataset.format;
+                    updateOutput();
+                });
+            });
+
+            // Input field listeners
+            elements.mcpName.addEventListener('input', function() {
+                state.mcpName = this.value;
+                updateOutput();
+            });
+
+            elements.configText.addEventListener('input', function() {
+                if (state.configMode === 'simple') {
+                    try {
+                        state.config = JSON.parse(this.value);
+                    } catch (e) {
+                        // Invalid JSON, keep previous config
+                    }
+                    updateOutput();
+                }
+            });
+
+            elements.badgeText.addEventListener('input', function() {
+                state.badgeText = this.value;
+                updateOutput();
+            });
+
+            elements.badgeColor.addEventListener('input', function() {
+                state.badgeColor = this.value;
+                updateOutput();
+            });
+
+            elements.logoColor.addEventListener('input', function() {
+                state.logoColor = this.value;
+                updateOutput();
+            });
+
+            // Enhanced config field listeners
+            [elements.command, elements.args, elements.env, elements.url, elements.headers].forEach(el => {
+                if (el) {
+                    el.addEventListener('input', function() {
+                        updateConfig();
+                        updateOutput();
+                    });
+                }
+            });
+
+            // Copy button
+            elements.copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(elements.generatedCode.textContent).then(() => {
+                    this.textContent = 'Copied!';
+                    this.classList.add('copied');
+                    setTimeout(() => {
+                        this.textContent = 'Copy to Clipboard';
+                        this.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+
+            // Initial update
+            updateOutput();
+        });
+
+        function updateConfig() {
+            if (state.configMode !== 'enhanced') return;
+
+            if (state.configType === 'stdio') {
+                const config = { type: 'stdio' };
+                
+                if (elements.command.value) config.command = elements.command.value;
+                if (elements.args.value) {
+                    config.args = elements.args.value.split(',').map(arg => arg.trim()).filter(arg => arg);
+                }
+                if (elements.env.value) {
+                    try {
+                        config.env = JSON.parse(elements.env.value);
+                    } catch (e) {
+                        // Invalid JSON, skip env
+                    }
+                }
+                
+                state.config = config;
+            } else {
+                const config = { type: state.configType };
+                
+                if (elements.url.value) config.url = elements.url.value;
+                if (elements.headers.value) {
+                    try {
+                        config.headers = JSON.parse(elements.headers.value);
+                    } catch (e) {
+                        // Invalid JSON, skip headers
+                    }
+                }
+                
+                state.config = config;
+            }
+        }
+
+        function generateInstallUrl() {
+            const configStr = encodeURIComponent(JSON.stringify(state.config));
+            return `https://vscode.dev/redirect/mcp/install?name=${encodeURIComponent(state.mcpName)}&config=${configStr}`;
+        }
+
+        function generateBadgeUrl() {
+            const text = state.badgeText.replace(/ /g, '_');
+            const color = state.badgeColor.replace('#', '');
+            const logoColor = state.logoColor.replace('#', '');
+            
+            return `https://img.shields.io/badge/VS_Code-${encodeURIComponent(text)}-${color}?style=${state.badgeStyle}&logo=visualstudiocode&logoColor=${logoColor}`;
+        }
+
+        function updateOutput() {
+            const installUrl = generateInstallUrl();
+            const badgeUrl = generateBadgeUrl();
+
+            // Update preview element
+            const previewHTML = `<a href="${installUrl}" target="_blank"><img src="${badgeUrl}" alt="Install in VS Code"></a>`;
+            elements.badgePreview.innerHTML = previewHTML;
+
+            // Generate code
+            let code;
+            if (state.outputFormat === 'markdown') {
+                code = `[![Install in VS Code](${badgeUrl})](${installUrl})`;
+            } else {
+                code = `<a href="${installUrl}"><img src="${badgeUrl}" alt="Install in VS Code"></a>`;
+            }
+
+            elements.generatedCode.textContent = code;
+        }
+    </script>
+</body>
+</html>
