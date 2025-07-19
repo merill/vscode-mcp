@@ -159,12 +159,27 @@
             text-decoration: none;
             font-weight: 500;
             font-size: 1rem;
-            transition: opacity 0.2s ease;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .about-link:hover {
-            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .about-icon {
+            flex-shrink: 0;
         }
 
         .social-links {
@@ -860,7 +875,12 @@
         <a href="https://merill.net" class="nav-brand" target="_blank" rel="noopener">merill.net</a>
         
         <div class="nav-right">
-            <a href="#" class="about-link" id="aboutBtn">About</a>
+            <a href="#" class="about-link" id="aboutBtn">
+                <svg class="about-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+                About
+            </a>
             
             <div class="social-links">
                 <a href="https://x.com/merill" class="social-link" target="_blank" rel="noopener" aria-label="X (Twitter)">
