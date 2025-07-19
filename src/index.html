@@ -1129,7 +1129,7 @@
 
         function generateInstallUrl() {
             const configStr = encodeURIComponent(JSON.stringify(state.config));
-            return `https://vscode.dev/redirect/mcp/install?name=${encodeURIComponent(state.mcpName)}&config=${configStr}`;
+            return `vscode:mcp/install?name=${encodeURIComponent(state.mcpName)}&config=${configStr}`;
         }
 
         function generateBadgeUrl() {
