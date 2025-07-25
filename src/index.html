@@ -1042,6 +1042,68 @@
             overflow: hidden;
         }
 
+        /* Tooltip Styles */
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            cursor: help;
+            color: #666;
+            transition: color 0.2s ease;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .tooltip-icon:hover {
+            color: #0078d4;
+        }
+
+        .tooltip-icon svg {
+            flex-shrink: 0;
+        }
+
+        .tooltip-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            white-space: pre-line;
+            z-index: 1000;
+            min-width: 280px;
+            max-width: 320px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-weight: 400;
+            text-align: left;
+        }
+
+        .tooltip-icon:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 117%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #333;
+            z-index: 1001;
+        }
+
+        /* Responsive tooltip positioning */
+        @media (max-width: 768px) {
+            .tooltip-icon:hover::after {
+                min-width: 240px;
+                max-width: 280px;
+                font-size: 0.8rem;
+            }
+        }
+
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
@@ -1310,8 +1372,22 @@
                                 <div class="config-left">
                                     <!-- MCP Name -->
                                     <div class="form-group">
-                                        <label for="mcpName">MCP Server Name</label>
-                                        <small class="field-description">A unique identifier for your MCP server (used internally by VS Code)</small>
+                                        <label for="mcpName">
+                                            MCP Server Name
+                                            <span class="tooltip-icon" data-tooltip="Tips for naming your MCP server:
+
+✅ Use camelCase for the server name, such as 'uiTesting'.
+❌ Avoid using whitespace or special characters.
+✅ Use a unique name for each server to avoid conflicts.
+✅ Use a descriptive name that reflects the server's functionality or brand, such as 'github' or 'database'.">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"/>
+                                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                                    <path d="M12 17h.01"/>
+                                                </svg>
+                                            </span>
+                                        </label>
+                                        <small class="field-description">Shown in VS Code's MCP server list</small>
                                         <input type="text" id="mcpName" placeholder="e.g., microsoft.docs.mcp" value="microsoft.docs.mcp">
                                     </div>
 
