@@ -299,6 +299,70 @@
             color: white;
         }
 
+        /* Version Selector Styles */
+        .version-selector-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 0;
+            background: transparent;
+        }
+
+        .version-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .version-select {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            color: #333;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 180px;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234B5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 16px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 48px;
+            position: relative;
+        }
+
+        .version-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: linear-gradient(145deg, #ffffff, #f1f3f4);
+        }
+
+        .version-select:focus {
+            outline: none;
+            transform: translateY(-1px);
+            box-shadow: 
+                0 0 0 3px rgba(59, 130, 246, 0.15),
+                0 8px 12px -2px rgba(0, 0, 0, 0.1),
+                0 4px 6px -1px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .version-select:active {
+            transform: translateY(0);
+        }
+
         .code-output {
             background: #2d3748;
             color: #e2e8f0;
@@ -1575,6 +1639,13 @@
 
             <!-- Generated Code Section -->
             <div class="code-section">
+                <div class="version-selector-group">
+                    <select id="versionSelect" class="version-select">
+                        <option value="vscode">VS Code</option>
+                        <option value="insiders">VS Code Insiders</option>
+                    </select>
+                </div>
+                
                 <div class="output-toggle">
                     <button class="output-btn active" data-format="markdown">Markdown</button>
                     <button class="output-btn" data-format="html">HTML</button>
@@ -1671,7 +1742,8 @@
             badgeText: 'Install Microsoft Docs MCP',
             badgeColor: '#0098FF',
             badgeStyle: 'flat-square',
-            outputFormat: 'markdown'
+            outputFormat: 'markdown',
+            outputVersion: 'vscode'
         };
 
         // DOM elements
@@ -1823,13 +1895,34 @@
             // Output format toggle
             document.querySelectorAll('.output-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    document.querySelectorAll('.output-btn').forEach(b => b.classList.remove('active'));
+                    if (this.dataset.format) {
+                        // This is a format toggle (markdown/html)
+                        document.querySelectorAll('.output-btn[data-format]').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        state.outputFormat = this.dataset.format;
+                        updateOutput();
+                    }
+                });
+            });
+
+            // Version tab toggle
+            document.querySelectorAll('.version-tab').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.version-tab').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    state.outputFormat = this.dataset.format;
+                    state.outputVersion = this.dataset.version;
                     updateOutput();
                 });
             });
+
+            // Version selector dropdown
+            const versionSelect = document.getElementById('versionSelect');
+            if (versionSelect) {
+                versionSelect.addEventListener('change', function() {
+                    state.outputVersion = this.value;
+                    updateOutput();
+                });
+            }
 
             // Input field listeners
             elements.mcpName.addEventListener('input', function() {
@@ -2037,6 +2130,12 @@
             return `vscode:mcp/install?${encodeURIComponent(JSON.stringify(state.config))}`;
         }
 
+        function generateInsidersInstallUrl() {
+            // VS Code Insiders version
+            console.log('Generating VS Code Insiders install URL with config:', state.config);
+            return `vscode-insiders:mcp/install?${encodeURIComponent(JSON.stringify(state.config))}`;
+        }
+
         function generateBadgeUrl() {
             const text = state.badgeText.replace(/ /g, '_');
             const color = state.badgeColor.replace('#', '');
@@ -2045,6 +2144,16 @@
             const validColor = color.length === 6 ? color : '0098FF';
             
             return `https://img.shields.io/badge/VS_Code-${encodeURIComponent(text)}-${validColor}?style=${state.badgeStyle}&logo=visualstudiocode&logoColor=ffffff`;
+        }
+
+        function generateInsidersBadgeUrl() {
+            const text = state.badgeText.replace(/ /g, '_');
+            const color = state.badgeColor.replace('#', '');
+            
+            // Ensure we have valid 6-character hex color
+            const validColor = color.length === 6 ? color : '24bfa5';
+            
+            return `https://img.shields.io/badge/VS_Code_Insiders-${encodeURIComponent(text)}-${validColor}?style=${state.badgeStyle}&logo=visualstudiocode&logoColor=ffffff`;
         }
 
         function highlightURL(url) {
@@ -2128,20 +2237,48 @@
         function updateOutput() {
             const installUrl = generateInstallUrl();
             const badgeUrl = generateBadgeUrl();
+            const insidersInstallUrl = generateInsidersInstallUrl();
+            const insidersBadgeUrl = generateInsidersBadgeUrl();
 
-            // Update preview element
-            const previewHTML = `<a href="${installUrl}" target="_blank"><img src="${badgeUrl}" alt="Install in VS Code"></a>`;
+            // Update preview element with both VS Code and VS Code Insiders
+            const previewHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 0.9rem; font-weight: 600; color: #333; margin-bottom: 10px; text-align: center;">VS Code</h4>
+                    <div style="text-align: center;">
+                        <a href="${installUrl}" target="_blank"><img src="${badgeUrl}" alt="Install in VS Code"></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="font-size: 0.9rem; font-weight: 600; color: #333; margin-bottom: 10px; text-align: center;">VS Code Insiders</h4>
+                    <div style="text-align: center;">
+                        <a href="${insidersInstallUrl}" target="_blank"><img src="${insidersBadgeUrl}" alt="Install in VS Code Insiders"></a>
+                    </div>
+                </div>
+            `;
             elements.badgePreview.innerHTML = previewHTML;
 
-            // Generate code
+            // Generate code based on selected version and format
             let code;
             let highlightedCode;
-            if (state.outputFormat === 'markdown') {
-                code = `[![Install in VS Code](${badgeUrl})](${installUrl})`;
-                highlightedCode = highlightMarkdown(code);
+            
+            if (state.outputVersion === 'vscode') {
+                // VS Code version
+                if (state.outputFormat === 'markdown') {
+                    code = `[![Install in VS Code](${badgeUrl})](${installUrl})`;
+                    highlightedCode = highlightMarkdown(code);
+                } else {
+                    code = `<a href="${installUrl}"><img src="${badgeUrl}" alt="Install in VS Code"></a>`;
+                    highlightedCode = highlightHTML(code);
+                }
             } else {
-                code = `<a href="${installUrl}"><img src="${badgeUrl}" alt="Install in VS Code"></a>`;
-                highlightedCode = highlightHTML(code);
+                // VS Code Insiders version
+                if (state.outputFormat === 'markdown') {
+                    code = `[![Install in VS Code Insiders](${insidersBadgeUrl})](${insidersInstallUrl})`;
+                    highlightedCode = highlightMarkdown(code);
+                } else {
+                    code = `<a href="${insidersInstallUrl}"><img src="${insidersBadgeUrl}" alt="Install in VS Code Insiders"></a>`;
+                    highlightedCode = highlightHTML(code);
+                }
             }
 
             // Store the plain text for copying
