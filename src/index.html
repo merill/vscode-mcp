@@ -1375,11 +1375,9 @@
                                         <label for="mcpName">
                                             MCP Server Name
                                             <span class="tooltip-icon" data-tooltip="Tips for naming your MCP server:
-
-✅ Use camelCase for the server name, such as 'uiTesting'.
 ❌ Avoid using whitespace or special characters.
 ✅ Use a unique name for each server to avoid conflicts.
-✅ Use a descriptive name that reflects the server's functionality or brand, such as 'github' or 'database'.">
+✅ Use a descriptive name that reflects the server's functionality or brand, such as 'Github' or 'database'.">
                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"/>
                                                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
@@ -2034,8 +2032,9 @@
         }
 
         function generateInstallUrl() {
-            const configStr = encodeURIComponent(JSON.stringify(state.config));
-            return `vscode:mcp/install?name=${encodeURIComponent(state.mcpName)}&config=${configStr}`;
+            // state.config already contains the full configuration structure
+            console.log('Generating install URL with config:', state.config);
+            return `vscode:mcp/install?${encodeURIComponent(JSON.stringify(state.config))}`;
         }
 
         function generateBadgeUrl() {
