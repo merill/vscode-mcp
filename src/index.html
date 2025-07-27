@@ -1069,15 +1069,48 @@
 
         .badge-options-row {
             display: grid;
-            grid-template-columns: auto 1fr;
+            grid-template-columns: 2fr 1fr;
             gap: 20px;
-            align-items: end;
+            align-items: start;
         }
 
         .badge-options-row .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .color-group {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+            min-width: 80px;
+            margin: 0;
+        }
+
+        .color-input-group input[type="color"] {
+            width: 40px;
+            height: 32px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
+
+        .color-input-group input[type="color"]:hover {
+            border-color: #0078d4;
+        }
         }
 
         @media (max-width: 768px) {
@@ -1372,7 +1405,7 @@
                         <div class="form-section">
                             <!-- Badge Text - Full Width -->
                             <div class="form-group">
-                                <label for="badgeText">Badge Text</label>
+                                <label for="badgeText">Install button</label>
                                 <small class="field-description">The text that will appear on your install button/badge</small>
                                 <input type="text" id="badgeText" placeholder="Install Microsoft Docs MCP" value="Install Microsoft Docs MCP">
                             </div>
@@ -1380,7 +1413,8 @@
             <!-- Badge Style and Color - Second Row -->
             <div class="badge-options-row">
                 <div class="form-group">
-                    <label>Badge Style</label>
+                    <label>Style</label>
+                    <small class="field-description">Choose the visual style for your badge</small>
                     <div class="style-options">
                         <button class="style-btn" data-style="flat">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A90E2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1422,8 +1456,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="badgeColor">Badge Color</label>
-                    <input type="color" id="badgeColor" value="#0098FF">
+                    <label>Colors</label>
+                    <small class="field-description">Choose colors for your badges</small>
+                    <div class="color-group">
+                        <div class="color-input-group">
+                            <label for="badgeColor" class="color-label">VS Code</label>
+                            <input type="color" id="badgeColor" value="#0098FF">
+                        </div>
+                        <div class="color-input-group">
+                            <label for="insidersBadgeColor" class="color-label">VS Code Insiders</label>
+                            <input type="color" id="insidersBadgeColor" value="#24bfa5">
+                        </div>
+                    </div>
                 </div>
             </div>                            <!-- VS Code Configuration Section -->
                             <h3 class="section-title">VS Code Configuration</h3>
@@ -1741,6 +1785,7 @@
             },
             badgeText: 'Install Microsoft Docs MCP',
             badgeColor: '#0098FF',
+            insidersBadgeColor: '#24bfa5',
             badgeStyle: 'flat-square',
             outputFormat: 'markdown',
             outputVersion: 'vscode'
@@ -1763,6 +1808,7 @@
             sseFields: document.getElementById('sseFields'),
             badgeText: document.getElementById('badgeText'),
             badgeColor: document.getElementById('badgeColor'),
+            insidersBadgeColor: document.getElementById('insidersBadgeColor'),
             badgePreview: document.getElementById('badgePreview'),
             generatedCode: document.getElementById('generatedCode'),
             copyBtn: document.getElementById('copyBtn')
@@ -1961,6 +2007,16 @@
                 updateOutput();
             });
 
+            elements.insidersBadgeColor.addEventListener('input', function() {
+                state.insidersBadgeColor = this.value;
+                updateOutput();
+            });
+
+            elements.insidersBadgeColor.addEventListener('change', function() {
+                state.insidersBadgeColor = this.value;
+                updateOutput();
+            });
+
             // Enhanced config field listeners
             [elements.command, elements.args, elements.env, elements.url, elements.headers, elements.sseUrl, elements.sseHeaders].forEach(el => {
                 if (el) {
@@ -2148,7 +2204,7 @@
 
         function generateInsidersBadgeUrl() {
             const text = state.badgeText.replace(/ /g, '_');
-            const color = state.badgeColor.replace('#', '');
+            const color = state.insidersBadgeColor.replace('#', '');
             
             // Ensure we have valid 6-character hex color
             const validColor = color.length === 6 ? color : '24bfa5';
