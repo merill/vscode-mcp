@@ -1424,6 +1424,51 @@
                 text-align: center;
             }
         }
+
+        /* Reset Button Styles */
+        .reset-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #343a40 0%, #23272b 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(52, 58, 64, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .reset-btn:hover {
+            background: linear-gradient(135deg, #23272b 0%, #1a1e21 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 58, 64, 0.6);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(52, 58, 64, 0.4);
+        }
+
+        .reset-btn svg {
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .reset-btn:hover svg {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body>
@@ -1752,6 +1797,17 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Reset Button Container -->
+                <div class="reset-container">
+                    <button class="reset-btn" id="resetBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 4 1 10 7 10"/>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                        </svg>
+                        Reset to Defaults
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1879,8 +1935,8 @@
     </div>
 
     <script>
-        // State management
-        let state = {
+        // Default state values for reset functionality
+        const defaultState = {
             mcpName: 'microsoft.docs.mcp',
             configType: 'http',
             command: 'npx',
@@ -1896,6 +1952,132 @@
             outputFormat: 'markdown',
             outputVersion: 'vscode'
         };
+
+        // State management with localStorage support
+        let state = { ...defaultState };
+
+        // LocalStorage key
+        const STORAGE_KEY = 'vscode-mcp-generator-state';
+
+        // Load state from localStorage
+        function loadStateFromStorage() {
+            try {
+                const savedState = localStorage.getItem(STORAGE_KEY);
+                if (savedState) {
+                    const parsed = JSON.parse(savedState);
+                    // Merge with default state to ensure all properties exist
+                    state = { ...defaultState, ...parsed };
+                    return true;
+                }
+            } catch (error) {
+                console.warn('Failed to load state from localStorage:', error);
+            }
+            return false;
+        }
+
+        // Save state to localStorage
+        function saveStateToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (error) {
+                console.warn('Failed to save state to localStorage:', error);
+            }
+        }
+
+        // Reset state to defaults and clear storage
+        function resetToDefaults() {
+            state = { ...defaultState };
+            localStorage.removeItem(STORAGE_KEY);
+            updateFormFromState();
+            updateOutput();
+        }
+
+        // Update form fields from current state
+        function updateFormFromState() {
+            // Update form fields
+            elements.mcpName.value = state.mcpName;
+            elements.badgeText.value = state.badgeText;
+            elements.badgeColor.value = state.badgeColor;
+            elements.insidersBadgeColor.value = state.insidersBadgeColor;
+            
+            // Update config type buttons
+            document.querySelectorAll('.config-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.type === state.configType) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update style buttons
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.style === state.badgeStyle) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update output format buttons
+            document.querySelectorAll('.output-btn[data-format]').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.format === state.outputFormat) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update version selector
+            const versionSelect = document.getElementById('versionSelect');
+            if (versionSelect) {
+                versionSelect.value = state.outputVersion;
+            }
+            
+            // Update config fields
+            showConfigFields();
+            updateConfigFieldsFromState();
+            updateConfig();
+        }
+
+        // Show appropriate config fields based on config type
+        function showConfigFields() {
+            document.querySelectorAll('.config-fields').forEach(f => f.classList.remove('active'));
+            
+            if (state.configType === 'stdio') {
+                elements.stdioFields.classList.add('active');
+            } else if (state.configType === 'http') {
+                elements.httpFields.classList.add('active');
+            } else if (state.configType === 'sse') {
+                elements.sseFields.classList.add('active');
+            }
+        }
+
+        // Update config fields from state
+        function updateConfigFieldsFromState() {
+            const config = state.config;
+            
+            if (state.configType === 'stdio') {
+                elements.command.value = config.command || state.command;
+                elements.args.value = config.args ? config.args.join('\n') : '';
+                elements.env.value = config.env ? JSON.stringify(config.env, null, 2) : '';
+                
+                // Update command type buttons
+                document.querySelectorAll('.command-type-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.command === elements.command.value) {
+                        btn.classList.add('active');
+                        elements.command.classList.remove('active');
+                    } else if (btn.dataset.command === 'custom' && 
+                               !['npx', 'node', 'uv', 'python', 'cmd', 'dotnet', 'docker'].includes(elements.command.value)) {
+                        btn.classList.add('active');
+                        elements.command.classList.add('active');
+                    }
+                });
+            } else if (state.configType === 'http') {
+                elements.url.value = config.url || '';
+                elements.headers.value = config.headers ? JSON.stringify(config.headers, null, 2) : '';
+            } else if (state.configType === 'sse') {
+                elements.sseUrl.value = config.url || '';
+                elements.sseHeaders.value = config.headers ? JSON.stringify(config.headers, null, 2) : '';
+            }
+        }
 
         // DOM elements
         const elements = {
@@ -1922,6 +2104,9 @@
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Load saved state from localStorage
+            loadStateFromStorage();
+            
             // About modal handling
             const aboutBtn = document.getElementById('aboutBtn');
             const aboutModal = document.getElementById('aboutModal');
@@ -1953,6 +2138,14 @@
                 }
             });
 
+            // Reset button functionality
+            const resetBtn = document.getElementById('resetBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    resetToDefaults();
+                });
+            }
+
             // Config type toggle
             document.querySelectorAll('.config-type-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1960,6 +2153,7 @@
                     this.classList.add('active');
                     
                     state.configType = this.dataset.type;
+                    saveStateToStorage();
                     
                     document.querySelectorAll('.config-fields').forEach(f => f.classList.remove('active'));
                     if (state.configType === 'stdio') {
@@ -2029,6 +2223,7 @@
                     }
                     
                     updateConfig();
+                    saveStateToStorage();
                     updateOutput();
                 });
             });
@@ -2040,6 +2235,7 @@
                     this.classList.add('active');
                     
                     state.badgeStyle = this.dataset.style;
+                    saveStateToStorage();
                     updateOutput();
                 });
             });
@@ -2052,6 +2248,7 @@
                         document.querySelectorAll('.output-btn[data-format]').forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                         state.outputFormat = this.dataset.format;
+                        saveStateToStorage();
                         updateOutput();
                     }
                 });
@@ -2063,6 +2260,7 @@
                     document.querySelectorAll('.version-tab').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     state.outputVersion = this.dataset.version;
+                    saveStateToStorage();
                     updateOutput();
                 });
             });
@@ -2072,6 +2270,7 @@
             if (versionSelect) {
                 versionSelect.addEventListener('change', function() {
                     state.outputVersion = this.value;
+                    saveStateToStorage();
                     updateOutput();
                 });
             }
@@ -2079,6 +2278,7 @@
             // Input field listeners
             elements.mcpName.addEventListener('input', function() {
                 state.mcpName = this.value;
+                saveStateToStorage();
                 updateConfig();
                 updateOutput();
             });
@@ -2087,6 +2287,7 @@
                 try {
                     const parsed = JSON.parse(this.value);
                     state.config = parsed;
+                    saveStateToStorage();
                     updateFormFromConfig();
                     updateOutput();
                 } catch (e) {
@@ -2100,26 +2301,31 @@
 
             elements.badgeText.addEventListener('input', function() {
                 state.badgeText = this.value;
+                saveStateToStorage();
                 updateOutput();
             });
 
             elements.badgeColor.addEventListener('input', function() {
                 state.badgeColor = this.value;
+                saveStateToStorage();
                 updateOutput();
             });
 
             elements.badgeColor.addEventListener('change', function() {
                 state.badgeColor = this.value;
+                saveStateToStorage();
                 updateOutput();
             });
 
             elements.insidersBadgeColor.addEventListener('input', function() {
                 state.insidersBadgeColor = this.value;
+                saveStateToStorage();
                 updateOutput();
             });
 
             elements.insidersBadgeColor.addEventListener('change', function() {
                 state.insidersBadgeColor = this.value;
+                saveStateToStorage();
                 updateOutput();
             });
 
@@ -2128,6 +2334,7 @@
                 if (el) {
                     el.addEventListener('input', function() {
                         updateConfig();
+                        saveStateToStorage();
                         updateOutput();
                     });
                 }
@@ -2146,14 +2353,15 @@
                 });
             });
 
-            // Initial update
+            // Initialize form from saved state or defaults
+            updateFormFromState();
             updateOutput();
             formatJSON(); // Format the initial JSON
 
-            // Initialize command input with default value
+            // Initialize command input with current state value
             elements.command.value = state.command;
             
-            // Initialize args placeholder based on default command
+            // Initialize args placeholder based on current command
             if (!elements.args.value.trim()) {
                 elements.args.placeholder = '-y\n@microsoft/mcp-server-playwright';
             }
