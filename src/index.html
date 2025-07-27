@@ -265,6 +265,33 @@
             margin-bottom: 25px;
         }
 
+        .badge-preview img {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .badge-section {
+            margin-bottom: 20px;
+        }
+
+        .badge-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .badge-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .badge-container {
+            text-align: center;
+            overflow: hidden;
+        }
+
         .code-section {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
@@ -2383,15 +2410,15 @@
 
             // Update preview element with both VS Code and VS Code Insiders
             const previewHTML = `
-                <div style="margin-bottom: 20px;">
-                    <h4 style="font-size: 0.9rem; font-weight: 600; color: #333; margin-bottom: 10px; text-align: center;">VS Code</h4>
-                    <div style="text-align: center;">
+                <div class="badge-section">
+                    <h4 class="badge-title">VS Code</h4>
+                    <div class="badge-container">
                         <a href="${installUrl}" target="_blank"><img src="${badgeUrl}" alt="Install in VS Code"></a>
                     </div>
                 </div>
-                <div>
-                    <h4 style="font-size: 0.9rem; font-weight: 600; color: #333; margin-bottom: 10px; text-align: center;">VS Code Insiders</h4>
-                    <div style="text-align: center;">
+                <div class="badge-section">
+                    <h4 class="badge-title">VS Code Insiders</h4>
+                    <div class="badge-container">
                         <a href="${insidersInstallUrl}" target="_blank"><img src="${insidersBadgeUrl}" alt="Install in VS Code Insiders"></a>
                     </div>
                 </div>
