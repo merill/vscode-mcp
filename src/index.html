@@ -2221,7 +2221,7 @@
         }
 
         function generateBadgeUrl() {
-            const text = state.badgeText.replace(/ /g, '_');
+            const text = state.badgeText.replace(/ /g, '_').replace(/-/g, '--');
             const color = state.badgeColor.replace('#', '');
             
             // Ensure we have valid 6-character hex color
@@ -2231,7 +2231,7 @@
         }
 
         function generateInsidersBadgeUrl() {
-            const text = state.badgeText.replace(/ /g, '_');
+            const text = state.badgeText.replace(/ /g, '_').replace(/-/g, '--');
             const color = state.insidersBadgeColor.replace('#', '');
             
             // Ensure we have valid 6-character hex color
