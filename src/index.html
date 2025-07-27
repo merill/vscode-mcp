@@ -276,27 +276,55 @@
 
         .output-toggle {
             display: flex;
-            background: #f5f5f5;
-            border-radius: 8px;
-            padding: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 6px;
             gap: 4px;
             margin-bottom: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .output-btn {
             flex: 1;
             padding: 10px 16px;
-            border: none;
-            background: transparent;
-            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #333;
+        }
+
+        .output-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .output-btn svg {
+            flex-shrink: 0;
             transition: all 0.2s ease;
         }
 
         .output-btn.active {
             background: #0078d4;
+            border-color: #0078d4;
             color: white;
+            box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
+        }
+
+        .output-btn.active:hover {
+            background: #106ebe;
+            border-color: #106ebe;
         }
 
         /* Version Selector Styles */
@@ -1660,7 +1688,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="headers">Headers (JSON)</label>
-                                                <small class="field-description">Optional HTTP headers for authentication or configuration (optional)</small>
+                                                <small class="field-description">(Optional) HTTP headers for authentication or configuration</small>
                                                 <textarea id="headers" placeholder='{"Authorization": "Bearer ${input:token}"}'></textarea>
                                             </div>
                                         </div>
@@ -1726,8 +1754,25 @@
                 </div>
                 
                 <div class="output-toggle">
-                    <button class="output-btn active" data-format="markdown">Markdown</button>
-                    <button class="output-btn" data-format="html">HTML</button>
+                    <button class="output-btn active" data-format="markdown">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+                            <path d="M8 8v8"/>
+                            <path d="M16 8v8"/>
+                            <path d="M8 12h8"/>
+                            <path d="M8 16h4"/>
+                        </svg>
+                        Markdown
+                    </button>
+                    <button class="output-btn" data-format="html">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 16 4-4-4-4"/>
+                            <path d="m6 8-4 4 4 4"/>
+                            <path d="M8 4v16"/>
+                            <path d="M16 4v16"/>
+                        </svg>
+                        HTML
+                    </button>
                 </div>
                 
                 <p style="color: #666; font-size: 0.9rem; margin: 10px 0; line-height: 1.4;">
