@@ -1676,7 +1676,7 @@
                                         <small class="field-description">Raw JSON configuration for your MCP server connection</small>
                                         <div class="json-editor-container">
                                             <div class="json-editor">
-                                                <textarea class="json-textarea" id="configText" placeholder='{"microsoft.docs.mcp":{"type":"http","url":"https://learn.microsoft.com/api/mcp"}}' spellcheck="false">{"microsoft.docs.mcp":{"type":"http","url":"https://learn.microsoft.com/api/mcp"}}</textarea>
+                                                <textarea class="json-textarea" id="configText" placeholder='{"name":"microsoft.docs.mcp","type":"http","url":"https://learn.microsoft.com/api/mcp"}' spellcheck="false">{"name":"microsoft.docs.mcp","type":"http","url":"https://learn.microsoft.com/api/mcp"}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1801,10 +1801,9 @@
             configType: 'http',
             command: 'npx',
             config: {
-                'microsoft.docs.mcp': {
-                    type: 'http',
-                    url: 'https://learn.microsoft.com/api/mcp'
-                }
+                name: 'microsoft.docs.mcp',
+                type: 'http',
+                url: 'https://learn.microsoft.com/api/mcp'
             },
             badgeText: 'Install Microsoft Docs MCP',
             badgeColor: '#0098FF',
@@ -2077,16 +2076,13 @@
         });
 
         function updateFormFromConfig() {
-            // Get the first MCP server config from state.config
-            const configKeys = Object.keys(state.config);
-            if (configKeys.length === 0) return;
-            
-            const mcpName = configKeys[0];
-            const config = state.config[mcpName];
+            // state.config is now a single configuration object with name property
+            const config = state.config;
+            if (!config || !config.name) return;
             
             // Update MCP name
-            state.mcpName = mcpName;
-            elements.mcpName.value = mcpName;
+            state.mcpName = config.name;
+            elements.mcpName.value = config.name;
             
             // Update config type and show appropriate fields
             if (config.type) {
@@ -2143,7 +2139,10 @@
 
         function updateConfig() {
             if (state.configType === 'stdio') {
-                const config = { type: 'stdio' };
+                const config = { 
+                    name: state.mcpName,
+                    type: 'stdio' 
+                };
                 
                 if (elements.command.value) config.command = elements.command.value;
                 if (elements.args.value) {
@@ -2157,9 +2156,12 @@
                     }
                 }
                 
-                state.config = { [state.mcpName]: config };
+                state.config = config;
             } else if (state.configType === 'http') {
-                const config = { type: 'http' };
+                const config = { 
+                    name: state.mcpName,
+                    type: 'http' 
+                };
                 
                 if (elements.url.value) config.url = elements.url.value;
                 if (elements.headers.value) {
@@ -2170,9 +2172,12 @@
                     }
                 }
                 
-                state.config = { [state.mcpName]: config };
+                state.config = config;
             } else if (state.configType === 'sse') {
-                const config = { type: 'sse' };
+                const config = { 
+                    name: state.mcpName,
+                    type: 'sse' 
+                };
                 
                 if (elements.sseUrl.value) config.url = elements.sseUrl.value;
                 if (elements.sseHeaders.value) {
@@ -2183,7 +2188,7 @@
                     }
                 }
                 
-                state.config = { [state.mcpName]: config };
+                state.config = config;
             }
             
             // Update the JSON textarea with the new config
