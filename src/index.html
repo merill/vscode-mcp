@@ -1155,6 +1155,17 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .color-input-group:hover {
+            border-color: #0078d4;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 2px 8px rgba(0, 120, 212, 0.1);
         }
 
         .color-label {
@@ -1201,7 +1212,6 @@
             transform: scale(1.05);
             transition: all 0.2s ease;
         }
-        }
 
         @media (max-width: 768px) {
             .field-group {
@@ -1214,18 +1224,25 @@
             }
             
             .badge-options-row .color-group {
-                flex-direction: column !important;
-                gap: 12px;
+                flex-direction: row !important;
+                gap: 16px;
+                justify-content: space-between;
             }
             
             .badge-options-row .color-input-group {
+                flex: 1;
                 justify-content: space-between;
-                padding: 8px 0;
             }
             
             .badge-options-row .color-label {
                 min-width: auto;
                 flex: 1;
+                text-align: left;
+            }
+            
+            .badge-options-row .color-input-group input[type="color"] {
+                flex-shrink: 0;
+                margin-left: 8px;
             }
         }
 
@@ -1239,17 +1256,19 @@
             }
             
             .badge-options-row .color-group {
-                gap: 16px;
-                flex-direction: column !important;
+                gap: 12px;
+                flex-direction: row !important;
+                justify-content: space-between;
             }
             
             .badge-options-row .color-input-group {
-                padding: 12px 0;
-                border-bottom: 1px solid #f0f0f0;
+                flex: 1;
+                justify-content: space-between;
             }
             
-            .badge-options-row .color-input-group:last-child {
-                border-bottom: none;
+            .badge-options-row .color-label {
+                font-size: 0.8rem;
+                text-align: left;
             }
         }
 
