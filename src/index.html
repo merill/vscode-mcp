@@ -1521,6 +1521,200 @@
         .reset-btn:hover svg {
             transform: rotate(180deg);
         }
+
+        /* Input with Button Styles */
+        .input-with-button {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .input-with-button input {
+            flex: 1;
+        }
+
+        .paste-json-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .paste-json-btn:hover {
+            background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+
+        .paste-json-btn svg {
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .input-with-button {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .paste-json-btn {
+                justify-content: center;
+                padding: 14px 16px;
+            }
+        }
+
+        /* JSON Paste Modal Styles */
+        .json-paste-modal {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            position: relative;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .json-paste-content {
+            padding: 40px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .json-paste-content h2 {
+            margin: 0 0 24px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .json-paste-content p {
+            margin: 0 0 32px 0;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .json-paste-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .json-textarea-container label {
+            display: block;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        .json-textarea-container {
+            position: relative;
+        }
+
+        .json-paste-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f8f9fa;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+        }
+
+        .json-paste-textarea:focus {
+            outline: none;
+            border-color: #0078d4;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+        }
+
+        .json-paste-textarea.error {
+            border-color: #dc3545;
+        }
+
+        .json-paste-textarea.success {
+            border-color: #28a745;
+        }
+
+        .json-error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(220, 53, 69, 0.1);
+            border-left: 3px solid #dc3545;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .json-success-message {
+            color: #28a745;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 3px solid #28a745;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .json-paste-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .json-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .json-btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .json-btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        .json-btn-apply {
+            background: #0078d4;
+            color: white;
+        }
+
+        .json-btn-apply:hover {
+            background: #106ebe;
+        }
+
+        .json-btn-apply:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -1594,7 +1788,20 @@
                             <div class="form-group">
                                 <label for="badgeText">Install button</label>
                                 <small class="field-description">The text that will appear on your install button/badge</small>
-                                <input type="text" id="badgeText" placeholder="Install Microsoft Docs MCP" value="Install Microsoft Docs MCP">
+                                <div class="input-with-button">
+                                    <input type="text" id="badgeText" placeholder="Install Microsoft Docs MCP" value="Install Microsoft Docs MCP">
+                                    <button type="button" class="paste-json-btn" id="pasteJsonBtn">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+                                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                            <path d="M12 11h4"/>
+                                            <path d="M12 16h4"/>
+                                            <path d="M8 11h.01"/>
+                                            <path d="M8 16h.01"/>
+                                        </svg>
+                                        Paste from VS Code mcp.json
+                                    </button>
+                                </div>
                             </div>
 
             <!-- Badge Style and Color - Second Row -->
@@ -1986,6 +2193,38 @@
         </div>
     </div>
 
+    <!-- JSON Paste Modal -->
+    <div class="modal-overlay" id="jsonPasteModal">
+        <div class="json-paste-modal">
+            <button class="modal-close" id="closeJsonModal">&times;</button>
+            
+            <div class="json-paste-content">
+                <h2>Paste from VS Code mcp.json</h2>
+                <p>Paste your MCP server configuration from your mcp.json file. The tool will automatically parse and populate the form fields.</p>
+                
+                <div class="json-paste-form">
+                    <div class="json-textarea-container">
+                        <label for="jsonInput">MCP Configuration JSON</label>
+                        <textarea 
+                            id="jsonInput" 
+                            class="json-paste-textarea" 
+                            placeholder='"microsoft.docs.mcp": {
+    "type": "http",
+    "url": "https://learn.microsoft.com/api/mcp"
+}'></textarea>
+                        <div class="json-error-message" id="jsonErrorMessage"></div>
+                        <div class="json-success-message" id="jsonSuccessMessage"></div>
+                    </div>
+                    
+                    <div class="json-paste-buttons">
+                        <button type="button" class="json-btn json-btn-cancel" id="jsonCancelBtn">Cancel</button>
+                        <button type="button" class="json-btn json-btn-apply" id="jsonApplyBtn" disabled>Apply Configuration</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Default state values for reset functionality
         const defaultState = {
@@ -2188,7 +2427,306 @@
                     aboutModal.classList.remove('active');
                     document.body.style.overflow = '';
                 }
+                if (e.key === 'Escape' && document.getElementById('jsonPasteModal').classList.contains('active')) {
+                    closeJsonPasteModal();
+                }
             });
+
+            // JSON Paste Modal handling
+            const pasteJsonBtn = document.getElementById('pasteJsonBtn');
+            const jsonPasteModal = document.getElementById('jsonPasteModal');
+            const closeJsonModal = document.getElementById('closeJsonModal');
+            const jsonCancelBtn = document.getElementById('jsonCancelBtn');
+            const jsonApplyBtn = document.getElementById('jsonApplyBtn');
+            const jsonInput = document.getElementById('jsonInput');
+            const jsonErrorMessage = document.getElementById('jsonErrorMessage');
+            const jsonSuccessMessage = document.getElementById('jsonSuccessMessage');
+
+            function openJsonPasteModal() {
+                jsonPasteModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                jsonInput.value = '';
+                hideJsonMessages();
+                jsonApplyBtn.disabled = true;
+                jsonInput.focus();
+            }
+
+            function closeJsonPasteModal() {
+                jsonPasteModal.classList.remove('active');
+                document.body.style.overflow = '';
+                jsonInput.value = '';
+                hideJsonMessages();
+                jsonApplyBtn.disabled = true;
+            }
+
+            function hideJsonMessages() {
+                jsonErrorMessage.style.display = 'none';
+                jsonSuccessMessage.style.display = 'none';
+                jsonInput.classList.remove('error', 'success');
+            }
+
+            function showJsonError(message) {
+                hideJsonMessages();
+                jsonErrorMessage.textContent = message;
+                jsonErrorMessage.style.display = 'block';
+                jsonInput.classList.add('error');
+                jsonApplyBtn.disabled = true;
+            }
+
+            function showJsonSuccess(message) {
+                hideJsonMessages();
+                jsonSuccessMessage.textContent = message;
+                jsonSuccessMessage.style.display = 'block';
+                jsonInput.classList.add('success');
+                jsonApplyBtn.disabled = false;
+            }
+
+            function validateAndParseJson(jsonText) {
+                try {
+                    if (!jsonText.trim()) {
+                        throw new Error('Please enter a JSON configuration');
+                    }
+
+                    let parsed;
+                    
+                    // Try to parse as complete object first
+                    try {
+                        parsed = JSON.parse(jsonText);
+                    } catch (e) {
+                        // If that fails, try wrapping in quotes and parsing as a property
+                        try {
+                            const wrapped = `{${jsonText}}`;
+                            parsed = JSON.parse(wrapped);
+                        } catch (e2) {
+                            throw new Error('Invalid JSON format. Please check your syntax.');
+                        }
+                    }
+
+                    // Extract the first server configuration
+                    let serverName, serverConfig;
+                    
+                    if (parsed.servers) {
+                        // Full mcp.json format
+                        const serverNames = Object.keys(parsed.servers);
+                        if (serverNames.length === 0) {
+                            throw new Error('No servers found in configuration');
+                        }
+                        serverName = serverNames[0];
+                        serverConfig = parsed.servers[serverName];
+                    } else {
+                        // Just a server object
+                        const serverNames = Object.keys(parsed);
+                        if (serverNames.length === 0) {
+                            throw new Error('No server configuration found');
+                        }
+                        serverName = serverNames[0];
+                        serverConfig = parsed[serverName];
+                    }
+
+                    if (!serverConfig || typeof serverConfig !== 'object') {
+                        throw new Error('Invalid server configuration format');
+                    }
+
+                    // Auto-detect type if not specified
+                    if (!serverConfig.type) {
+                        if (serverConfig.url) {
+                            serverConfig.type = 'http';
+                        } else if (serverConfig.command) {
+                            serverConfig.type = 'stdio';
+                        } else {
+                            throw new Error('Server configuration must have a "type" field, or include "url" (for http) or "command" (for stdio) fields for auto-detection');
+                        }
+                    }
+
+                    // Validate required fields based on type
+                    if (serverConfig.type === 'stdio') {
+                        if (!serverConfig.command) {
+                            throw new Error('stdio servers must have a "command" field');
+                        }
+                    } else if (serverConfig.type === 'http' || serverConfig.type === 'sse') {
+                        if (!serverConfig.url) {
+                            throw new Error(`${serverConfig.type} servers must have a "url" field`);
+                        }
+                    } else {
+                        throw new Error(`Unsupported server type: ${serverConfig.type}`);
+                    }
+
+                    return { serverName, serverConfig };
+                } catch (error) {
+                    throw error;
+                }
+            }
+
+            function applyJsonConfiguration(serverName, serverConfig) {
+                // Update MCP name
+                elements.mcpName.value = serverName;
+                state.mcpName = serverName;
+
+                // Update badge text
+                const badgeText = `Install ${serverName}`;
+                elements.badgeText.value = badgeText;
+                state.badgeText = badgeText;
+
+                // Update config type
+                state.configType = serverConfig.type;
+                updateConfigTypeUI();
+
+                // Clear all fields first
+                elements.command.value = '';
+                elements.args.value = '';
+                elements.url.value = '';
+                elements.headers.value = '';
+                elements.sseUrl.value = '';
+                elements.sseHeaders.value = '';
+
+                // Apply configuration based on type
+                if (serverConfig.type === 'stdio') {
+                    if (serverConfig.command) {
+                        // Parse command to extract base command and args
+                        const parts = Array.isArray(serverConfig.command) 
+                            ? serverConfig.command 
+                            : [serverConfig.command];
+                        
+                        if (parts.length > 0) {
+                            const baseCommand = parts[0];
+                            elements.command.value = baseCommand;
+                            state.command = baseCommand;
+                            
+                            // Update command type button
+                            updateCommandTypeButton(baseCommand);
+                        }
+                        
+                        if (parts.length > 1) {
+                            elements.args.value = parts.slice(1).join(' ');
+                            state.args = parts.slice(1).join(' ');
+                        }
+                    }
+                    
+                    if (serverConfig.args && Array.isArray(serverConfig.args)) {
+                        const existingArgs = elements.args.value;
+                        const newArgs = serverConfig.args.join('\n');
+                        elements.args.value = existingArgs ? `${existingArgs}\n${newArgs}` : newArgs;
+                        state.args = elements.args.value;
+                    }
+                } else if (serverConfig.type === 'http') {
+                    if (serverConfig.url) {
+                        elements.url.value = serverConfig.url;
+                        state.url = serverConfig.url;
+                    }
+                    if (serverConfig.headers) {
+                        elements.headers.value = JSON.stringify(serverConfig.headers, null, 2);
+                        state.headers = elements.headers.value;
+                    }
+                } else if (serverConfig.type === 'sse') {
+                    if (serverConfig.url) {
+                        elements.sseUrl.value = serverConfig.url;
+                        state.sseUrl = serverConfig.url;
+                    }
+                    if (serverConfig.headers) {
+                        elements.sseHeaders.value = JSON.stringify(serverConfig.headers, null, 2);
+                        state.sseHeaders = elements.sseHeaders.value;
+                    }
+                }
+
+                // Update the JSON editor
+                updateConfig();
+                
+                // Update UI and preview
+                updateOutput();
+                updateFormFromState();
+                
+                // Save state
+                saveStateToStorage();
+                
+                // Close modal
+                closeJsonPasteModal();
+            }
+
+            function updateCommandTypeButton(command) {
+                // Update command type buttons to reflect the parsed command
+                document.querySelectorAll('.command-type-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.command === command) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // If command doesn't match any preset, select custom
+                const matchingBtn = document.querySelector(`[data-command="${command}"]`);
+                if (!matchingBtn) {
+                    const customBtn = document.querySelector('[data-command="custom"]');
+                    if (customBtn) {
+                        customBtn.classList.add('active');
+                        const customInput = document.getElementById('customCommand');
+                        if (customInput) {
+                            customInput.value = command;
+                            customInput.closest('.command-custom-input').classList.add('active');
+                        }
+                    }
+                }
+            }
+
+            // Event listeners for JSON paste modal
+            pasteJsonBtn.addEventListener('click', openJsonPasteModal);
+            closeJsonModal.addEventListener('click', closeJsonPasteModal);
+            jsonCancelBtn.addEventListener('click', closeJsonPasteModal);
+
+            jsonPasteModal.addEventListener('click', function(e) {
+                if (e.target === jsonPasteModal) {
+                    closeJsonPasteModal();
+                }
+            });
+
+            jsonInput.addEventListener('input', function() {
+                const jsonText = this.value.trim();
+                
+                if (!jsonText) {
+                    hideJsonMessages();
+                    jsonApplyBtn.disabled = true;
+                    return;
+                }
+
+                try {
+                    const { serverName, serverConfig } = validateAndParseJson(jsonText);
+                    showJsonSuccess(`Valid configuration found for "${serverName}" (${serverConfig.type})`);
+                } catch (error) {
+                    showJsonError(error.message);
+                }
+            });
+
+            jsonApplyBtn.addEventListener('click', function() {
+                try {
+                    const jsonText = jsonInput.value.trim();
+                    const { serverName, serverConfig } = validateAndParseJson(jsonText);
+                    applyJsonConfiguration(serverName, serverConfig);
+                } catch (error) {
+                    showJsonError(error.message);
+                }
+            });
+
+            // Helper function to update config type UI
+            function updateConfigTypeUI() {
+                // Update config type buttons
+                document.querySelectorAll('.config-type-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.type === state.configType) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                // Show/hide appropriate config fields
+                elements.stdioFields.classList.remove('active');
+                elements.httpFields.classList.remove('active');
+                elements.sseFields.classList.remove('active');
+
+                if (state.configType === 'stdio') {
+                    elements.stdioFields.classList.add('active');
+                } else if (state.configType === 'http') {
+                    elements.httpFields.classList.add('active');
+                } else if (state.configType === 'sse') {
+                    elements.sseFields.classList.add('active');
+                }
+            }
 
             // Reset button functionality
             const resetBtn = document.getElementById('resetBtn');
