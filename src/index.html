@@ -1210,13 +1210,46 @@
             
             .badge-options-row {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 20px;
+            }
+            
+            .badge-options-row .color-group {
+                flex-direction: column !important;
+                gap: 12px;
+            }
+            
+            .badge-options-row .color-input-group {
+                justify-content: space-between;
+                padding: 8px 0;
+            }
+            
+            .badge-options-row .color-label {
+                min-width: auto;
+                flex: 1;
             }
         }
 
         @media (max-width: 480px) {
             .field-group {
                 grid-template-columns: 1fr;
+            }
+            
+            .badge-options-row {
+                gap: 24px;
+            }
+            
+            .badge-options-row .color-group {
+                gap: 16px;
+                flex-direction: column !important;
+            }
+            
+            .badge-options-row .color-input-group {
+                padding: 12px 0;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .badge-options-row .color-input-group:last-child {
+                border-bottom: none;
             }
         }
 
