@@ -1,8 +1,12 @@
 # VS Code MCP Install Button Generator
 
-Handy utility app to help generate VS Code install buttons and links for Model Context Protocol (MCP) servers. Create professional one-click install experiences for your MCP projects with customizable badges and comprehensive configuration support.
+Handy utility app to help generate VS Code install buttons and links for Model Context Protocol (MCP) servers. Create professional one-click install experiences for your MCP projects with customizable badges and comprehensive configuration support. 
+
+📺 [Watch full demo on YouTube](https://youtu.be/1JcRtQxmh3I)
 
 Try it out live at [VSCodeMCP.com](https://vscodemcp.com)!
+
+
 
 ![Homepage Screenshot](assets/vscodemcp-screenshot.png)
 
